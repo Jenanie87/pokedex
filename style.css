@@ -344,6 +344,7 @@ h2 {
     box-shadow: 14px 16px 7px 0px rgba(0, 0, 0, 0.5);
     background-color: var(--darkergrey);
     width: 50%;
+    cursor: pointer;
 }
 
 .general_information {
@@ -363,11 +364,6 @@ h2 {
     height: 250px;
 }
 
-.bigPokemon_speaker {
-    width: 50px;
-    height: 50px;
-}
-
 .bigPokemon_image:hover {
     transform: scaleX(-1);
 }
@@ -377,8 +373,21 @@ h2 {
 
 }
 
-.speaker_icon {
+.speaker_position {
     display: flex;
     justify-content: flex-end;
+}
+
+.speaker_iconDiv {
+    display: flex;
+    justify-content: center;
     margin-top: -64px;
+    border-radius: 50%;
+    width: 56px;
+    align-items: center;
+}
+
+.bigPokemon_speaker {
+    width: 50px;
+    height: 50px;
 }

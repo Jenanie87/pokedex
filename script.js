@@ -107,6 +107,8 @@ function doNotClose(event) {
 
 function generatePokemonInfosInnerHTML(i) {
     pokemon = fetchedPokemon[i];
+    let urlAudio = pokemon.cries.latest;
+
     console.log(pokemon.stats);
     return /* HTML */ `
         <div onclick="doNotClose(event)" class="pokemon_card_big">
@@ -119,10 +121,21 @@ function generatePokemonInfosInnerHTML(i) {
                 <img class="bigPokemon_image" src="${pokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>
             </div>
             <div class="general_information pad_section">
-                <div class="speaker_icon">
-                    <img class="bigPokemon_speaker" src="img/speaker_icon.svg" alt="speaker"/>
+                <div class="speaker_position">
+                <div onclick="playAudio()" class="speaker_iconDiv bgText_grassPokemon">
+                    <img class="bigPokemon_speaker" src="img/play_icon.png" alt="speaker"/>
+                </div>
+                <audio id="audioSound">
+                    <source src="${urlAudio}" type="audio/ogg">
+                </audio>
                 </div>
                 <div class="information_content">stats</div>
             </div>
         </div>`;
+}
+
+
+function playAudio() {
+    let audioSound = document.querySelector('#audioSound');
+    audioSound.play();
 }
