@@ -1,0 +1,308 @@
+:root {
+    --yellow: #FFCB05;
+    --darkyellow: #c7a008;
+    --darkblue: #3c5aa6;
+    --lightblue: #2a75bb;
+
+    --red: #ee1515;
+    --darkred: #f00000;
+    --darkgrey: #222224;
+    --darkergrey: #0d0d0e;
+    --lightgrey: #f0f0f0;
+
+    --grass: #7AC74C;
+    --grasslight: #b3da9c;
+    --fire: #EE8130;
+    --firelight: #eca269;
+    --water: #6390F0;
+    --waterlight: #93b0ee;
+    --electric: #F7D02C;
+    --electriclight: #f0da84;
+    --bug: #a6b91a;
+    --buglight: #c5cf8e;
+    --normal: #a8a77a;
+    --normallight: #cacaa4;
+    --ice: #96D9D6;
+    --icelight: #b8ecea;
+    --poison: #A33EA1;
+    --poisonlight: #b55fb4;
+    --ground: #E2BF65;
+    --groundlight: #f4d586;
+    --fairy: #D685AD;
+    --fairylight: #eca8ca;
+    --fighting: #C22E28;
+    --fightinglight: #d45b56; 
+    --psychic: #F95587;
+    --psychiclight: #f988aa;
+    --rock: #B6A136;
+    --rocklight: #d4c370;
+    --ghost: #735797;
+    --ghostlight: #9278b5;
+    --dragon: #6F35FC;
+    --dragonlight: #9c79f5;
+    --dark: #705746;
+    --darklight: #9c8270;
+    --steel: #B7B7CE;
+    --steellight: #e2e2ef;
+    --flying: #A98FF3;
+    --flyinglight: #ccbff1;
+}
+
+.pad_section {
+    padding: 8px 16px;
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Sigmar One';
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--darkgrey);
+    height: 100vh;
+    cursor: url("img/pokeball_small_icon.png"), default;
+}
+
+.logo {
+    height: 200px;
+}
+
+#main_container {
+    max-width: 1920px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+/*     height: 100vh; */
+}
+
+#content {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 16px;
+}
+
+.pokemon_card {
+    width: 325px;
+    border-radius: 32px;
+    box-shadow: 4px 6px 7px 0px rgba(0, 0, 0, 0.3);
+    background-color: var(--darkergrey);
+    cursor: pointer;
+}
+
+.top_card {
+    border-top-left-radius: 32px;
+    border-top-right-radius: 32px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+/* start -> class to change color depending on the element of the pokemon */
+
+.bg_grassPokemon {
+    background-color: var(--grass);
+}
+
+.bg_firePokemon {
+    background-color: var(--fire);
+}
+
+.bg_waterPokemon {
+    background-color: var(--water);
+}
+
+.bg_electricPokemon {
+    background-color: var(--electric);
+}
+
+.bg_bugPokemon {
+    background-color: var(--bug);
+}
+
+.bg_normalPokemon {
+    background-color: var(--normal);
+}
+
+.bg_poisonPokemon {
+    background-color: var(--poison);
+}
+
+.bg_groundPokemon {
+    background-color: var(--ground);
+}
+
+.bg_fairyPokemon {
+    background-color: var(--fairy);
+}
+
+.bg_fightingPokemon {
+    background-color: var(--fighting);
+}
+
+.bg_psychicPokemon {
+    background-color: var(--psychic);
+}
+
+.bg_rockPokemon {
+    background-color: var(--rock);
+}
+
+.bg_ghostPokemon {
+    background-color: var(--ghost);
+}
+
+.bg_dragonPokemon {
+    background-color: var(--dragon);
+}
+
+.bg_steelPokemon {
+    background-color: var(--steel);
+}
+
+.bg_flyingPokemon {
+    background-color: var(--flying);
+}
+
+.bg_icePokemon {
+    background-color: var(--ice);
+}
+
+.bg_darkPokemon {
+    background-color: var(--dark);
+}
+
+/* end -> class to change color depending on the element of the pokemon */
+
+.pokemon_image {
+    display: flex;
+    justify-content: center;
+    border-bottom-left-radius: 32px;
+    border-bottom-right-radius: 32px;
+}
+
+/* .general_information {
+    margin-top: -32px;
+    border-top-left-radius: 32px;
+    border-top-right-radius: 32px;
+    border-bottom-left-radius: 32px;
+    border-bottom-right-radius: 32px;
+    height: 100px;
+    background-color: var(--darkergrey);
+} */
+
+h2 {
+    letter-spacing: -1.5px;
+    font-size: 32px;
+}
+
+.id {
+    display: flex;
+    justify-content: end;
+    margin-top: -8px;
+}
+
+.pokemon_element {
+    display: flex;
+    margin-top: -16px;
+    gap: 8px;
+}
+
+.text_element {
+    padding: 0px 16px;
+    border-radius: 32px;
+}
+
+/* start -> class to change color depending on the element of the pokemon */
+
+.bgText_grassPokemon {
+    background-color: var(--grasslight);
+}
+
+.bgText_firePokemon {
+    background-color: var(--firelight);
+}
+
+.bgText_waterPokemon {
+    background-color: var(--waterlight);
+}
+
+.bgText_electricPokemon {
+    background-color: var(--electriclight);
+}
+
+.bgText_bugPokemon {
+    background-color: var(--buglight);
+}
+
+.bgText_normalPokemon {
+    background-color: var(--normallight);
+}
+
+.bgText_poisonPokemon {
+    background-color: var(--poisonlight);
+}
+
+.bgText_groundPokemon {
+    background-color: var(--groundlight);
+}
+
+.bgText_fairyPokemon {
+    background-color: var(--fairylight);
+}
+
+.bgText_fightingPokemon {
+    background-color: var(--fightinglight);
+}
+
+.bgText_psychicPokemon {
+    background-color: var(--psychiclight);
+}
+
+.bgText_rockPokemon {
+    background-color: var(--rocklight);
+}
+
+.bgText_ghostPokemon {
+    background-color: var(--ghostlight);
+}
+
+.bgText_dragonPokemon {
+    background-color: var(--dragonlight);
+}
+
+.bgText_steelPokemon {
+    background-color: var(--steellight);
+}
+
+.bgText_flyingPokemon {
+    background-color: var(--flyinglight);
+}
+
+.bgText_icePokemon {
+    background-color: var(--icelight);
+}
+
+.bgText_darkPokemon {
+    background-color: var(--darklight);
+}
+
+/* end -> class to change color depending on the element of the pokemon */
+
+.img_pokemon {
+    margin: 8px 0px;
+    width: 200px;
+    height: 200px;
+}
+
+.img_pokemom:hover {
+    transform: scale(1.1);
+    transition: all 300ms ease-in-out;
+}
