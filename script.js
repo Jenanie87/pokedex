@@ -7,7 +7,6 @@ async function loadPokemon() {
     let url = 'https://pokeapi.co/api/v2/pokemon';
     let response = await fetch(url);
     responseAsJSON = await response.json();
-    console.log(responseAsJSON.next);
     selectionPokemon = responseAsJSON.results;
     renderPokemonInfo();
 }
@@ -23,7 +22,6 @@ async function renderPokemonInfo() {
         let response = await fetch(url);
         currentPokemon = await response.json();
         fetchedPokemon.push(currentPokemon);
-        console.log(currentPokemon.abilities);
 
         content.innerHTML += generatePokemonCardsInnerHTML(i);
                              renderPokemonElements(currentPokemon, i);
@@ -109,6 +107,7 @@ function doNotClose(event) {
 
 function generatePokemonInfosInnerHTML(i) {
     pokemon = fetchedPokemon[i];
+    console.log(pokemon.stats);
     return /* HTML */ `
         <div onclick="doNotClose(event)" class="pokemon_card_big">
             <div id="top_card${i}" class="top_card pad_section">
@@ -117,10 +116,13 @@ function generatePokemonInfosInnerHTML(i) {
                 <div id="pokemon_element${i}" class="pokemon_element"></div>
             </div>
             <div id="pokemon_image${i}" class="pokemon_image">
-                <img class="img_pokemon" src="${pokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>
+                <img class="bigPokemon_image" src="${pokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>
             </div>
-            <div class="general_information">
-            <div></div>
+            <div class="general_information pad_section">
+                <div class="speaker_icon">
+                    <img class="bigPokemon_speaker" src="img/speaker_icon.svg" alt="speaker"/>
+                </div>
+                <div class="information_content">stats</div>
             </div>
         </div>`;
 }

@@ -348,10 +348,37 @@ h2 {
 
 .general_information {
     margin-top: -56px;
+    padding-top: 40px;
     border-top-left-radius: 32px;
     border-top-right-radius: 32px;
     border-bottom-left-radius: 32px;
     border-bottom-right-radius: 32px;
-    height: 100px;
+    color: white;
     background-color: var(--darkergrey);
+}
+
+.bigPokemon_image {
+    margin: 8px 0px;
+    width: 250px;
+    height: 250px;
+}
+
+.bigPokemon_speaker {
+    width: 50px;
+    height: 50px;
+}
+
+.bigPokemon_image:hover {
+    transform: scaleX(-1);
+}
+
+.information_content {
+    border: 2px solid yellow;
+
+}
+
+.speaker_icon {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -64px;
 }
