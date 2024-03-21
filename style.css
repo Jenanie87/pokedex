@@ -370,11 +370,15 @@ h2 {
     transform: scaleX(-1);
 }
 
+.headlines {
+    display: flex;
+}
+
 h3 {
     font-size: 24px;
 }
 
-.headline_stats {
+.headline_style {
     text-decoration-line: underline;
     text-decoration-color: var(--darkred);
     text-underline-offset: 6px;
@@ -399,4 +403,12 @@ h3 {
 .bigPokemon_speaker {
     width: 50px;
     height: 50px;
+}
+
+.first {
+    color: grey;
+}
+
+.second {
+    padding-left: 24px;
 }

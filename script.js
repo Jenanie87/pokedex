@@ -112,8 +112,6 @@ function doNotClose(event) {
 function generatePokemonInfosInnerHTML(i) {
     pokemon = fetchedPokemon[i];
     let urlAudio = pokemon.cries.latest;
-    console.log(convertNumber(pokemon.height));
-    console.log(convertNumber(pokemon.weight));
     console.log(pokemon.abilities[0].ability.name);
     return /* HTML */ `
         <div onclick="doNotClose(event)" class="pokemon_card_big">
@@ -136,23 +134,23 @@ function generatePokemonInfosInnerHTML(i) {
                 </div>
                 <div class="information_content">
                     <div class="headlines">
-                        <h3 class="headline_stats pad_section">About</h3>
-                        <h3 onclick="renderStatChart(pokemon)" class="headline_stats pad_section">Base Stats</h3>
+                        <h3 id="headline_about" class="pad_section">About</h3>
+                        <h3 id="headline_stats" onclick="renderStatChart(pokemon)" class="pad_section">Base Stats</h3>
                     </div>
                         <div class="content_slide pad_section">
                         <!-- Slides -->
                             <table>
                                 <tbody>
                                     <tr>
-                                        <td>Height:</td>
-                                        <td class="second">200 cm</td>
+                                        <td class="first">Height:</td>
+                                        <td class="second">${convertNumber(pokemon.height)} m</td>
                                     </tr>
                                     <tr>
-                                        <td>Weight:</td>
-                                        <td class="second">5 kg</td>
+                                        <td class="first">Weight:</td>
+                                        <td class="second">${convertNumber(pokemon.weight)} kg</td>
                                     </tr>
                                     <tr>
-                                        <td>Abilities:</td>
+                                        <td class="first">Abilities:</td>
                                         <td class="second">Ability 1</td>
                                         <td class="second">Ability 2</td>
                                     </tr>
@@ -179,6 +177,7 @@ function playAudio() {
 function renderStatChart(pokemon) {
     let contentStats = document.querySelector('.content_slide');
     contentStats.innerHTML = generateStatsInnerHTML();
+    addClassActiveSlide();
     showStatChart(pokemon);
 }
 
@@ -186,6 +185,11 @@ function renderStatChart(pokemon) {
 function generateStatsInnerHTML() {
     return /* HTML */`
     <canvas id="barStats" width="400" height="400"></canvas>`;
+}
+
+
+function addClassActiveSlide() {
+    document.querySelector('#headline_stats').classList.toggle('headline_style');
 }
 
 
