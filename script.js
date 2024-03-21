@@ -112,8 +112,9 @@ function doNotClose(event) {
 function generatePokemonInfosInnerHTML(i) {
     pokemon = fetchedPokemon[i];
     let urlAudio = pokemon.cries.latest;
-
-    console.log(pokemon.stats);
+    console.log(convertNumber(pokemon.height));
+    console.log(convertNumber(pokemon.weight));
+    console.log(pokemon.abilities[0].ability.name);
     return /* HTML */ `
         <div onclick="doNotClose(event)" class="pokemon_card_big">
             <div id="top_card${i}" class="top_card pad_section">
@@ -133,31 +134,39 @@ function generatePokemonInfosInnerHTML(i) {
                     <source src="${urlAudio}" type="audio/ogg">
                 </audio>
                 </div>
-                <!-- First Slide -->
                 <div class="information_content">
-                    <h3 class="headline_stats">stats</h3>
-                    <div class="stat_hp">
-                        <div>hp</div>
+                    <div class="headlines">
+                        <h3 class="headline_stats pad_section">About</h3>
+                        <h3 onclick="renderStatChart(pokemon)" class="headline_stats pad_section">Base Stats</h3>
                     </div>
-                    <div class="stat_hp">
-                        <div>attack</div>
-                    </div>
-                    <div class="stat_hp">
-                        <div>defense</div>
-                    </div>
-                    <div class="stat_hp">
-                        <div>special-attack</div>
-                    </div>
-                    <div class="stat_hp">
-                        <div>special-defense</div>
-                    </div>
-                    <div class="stat_hp">
-                        <div>speed</div>
-                    </div>
-                </div>
-                    
+                        <div class="content_slide pad_section">
+                        <!-- Slides -->
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>Height:</td>
+                                        <td class="second">200 cm</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Weight:</td>
+                                        <td class="second">5 kg</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Abilities:</td>
+                                        <td class="second">Ability 1</td>
+                                        <td class="second">Ability 2</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>                     
+                </div>              
             </div>
         </div>`;
+}
+
+
+function convertNumber(number) {
+    return number / 10;
 }
 
 
@@ -167,41 +176,65 @@ function playAudio() {
 }
 
 
-const config = {
-    type: 'bar',
-    data,
-    options: {
-      indexAxis: 'y',
-    }
-  };
+function renderStatChart(pokemon) {
+    let contentStats = document.querySelector('.content_slide');
+    contentStats.innerHTML = generateStatsInnerHTML();
+    showStatChart(pokemon);
+}
 
 
-  const labels = Utils.months({count: 7});
-  const data = {
-    labels: labels,
-    datasets: [{
-      axis: 'y',
-      label: 'My First Dataset',
-      data: [65, 59, 80, 81, 56, 55, 40],
-      fill: false,
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(255, 159, 64, 0.2)',
-        'rgba(255, 205, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(201, 203, 207, 0.2)'
-      ],
-      borderColor: [
-        'rgb(255, 99, 132)',
-        'rgb(255, 159, 64)',
-        'rgb(255, 205, 86)',
-        'rgb(75, 192, 192)',
-        'rgb(54, 162, 235)',
-        'rgb(153, 102, 255)',
-        'rgb(201, 203, 207)'
-      ],
-      borderWidth: 1
-    }]
-  };
+function generateStatsInnerHTML() {
+    return /* HTML */`
+    <canvas id="barStats" width="400" height="400"></canvas>`;
+}
+
+
+// register plugin
+Chart.register(ChartDataLabels);
+
+
+function showStatChart(pokemon) {
+    let ctx = document.getElementById('barStats').getContext('2d');
+    Chart.defaults.font.size = 16;
+    Chart.defaults.color = '#ffffff';
+    Chart.defaults.font.family = "'Sigmar One', sansr-serif";
+    Chart.defaults.plugins.legend.display = false;
+    Chart.defaults.plugins.tooltip.enabled = false;
+    barStats = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: [pokemon.stats[0].stat.name, pokemon.stats[1].stat.name, pokemon.stats[2].stat.name, pokemon.stats[3].stat.name, pokemon.stats[4].stat.name, pokemon.stats[5].stat.name],
+          datasets: [{
+            axis: 'y',
+            data: [pokemon.stats[0].base_stat, pokemon.stats[1].base_stat, pokemon.stats[2].base_stat, pokemon.stats[3].base_stat, pokemon.stats[4].base_stat, pokemon.stats[5].base_stat],
+            fill: false,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(255, 205, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(201, 203, 207, 0.2)'
+            ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(255, 159, 64)',
+              'rgb(255, 205, 86)',
+              'rgb(75, 192, 192)',
+              'rgb(54, 162, 235)',
+              'rgb(153, 102, 255)',
+              'rgb(201, 203, 207)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+            indexAxis: 'y',
+            plugins: [ChartDataLabels]
+        }
+        
+      });
+}
+
+
