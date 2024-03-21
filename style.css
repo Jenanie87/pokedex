@@ -368,10 +368,16 @@ h2 {
     transform: scaleX(-1);
 }
 
-.information_content {
-    border: 2px solid yellow;
-
+.headline_stats {
+    text-decoration-line: underline;
+    text-decoration-color: var(--darkred);
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
 }
+
+/* .information_content {
+    border: 2px solid yellow;
+} */
 
 .speaker_position {
     display: flex;
@@ -385,6 +391,7 @@ h2 {
     border-radius: 50%;
     width: 56px;
     align-items: center;
+    opacity: 0.8;
 }
 
 .bigPokemon_speaker {

@@ -79,6 +79,9 @@ function changeBackgroundColor(array, i) {
 function addClassColor(array, i) {
     document.querySelector(`#top_card${i}`).classList.add(`bg_${array.types[0].type.name}Pokemon`);
     document.querySelector(`#pokemon_image${i}`).classList.add(`bg_${array.types[0].type.name}Pokemon`);
+    if(document.querySelector(`#speaker_iconDiv${i}`)) {
+        document.querySelector(`#speaker_iconDiv${i}`).classList.add(`bgText_${array.types[0].type.name}Pokemon`);
+    }
     document.querySelectorAll(`#text_element${i}`).forEach((textElement) => {
         textElement.classList.add(`bgText_${array.types[0].type.name}Pokemon`);
     });
@@ -87,6 +90,7 @@ function addClassColor(array, i) {
 
 function openBigCard(i) {
     changeBigCard();
+
     let bg_container = document.querySelector('.bg_container');
     bg_container.innerHTML = generatePokemonInfosInnerHTML(i);
                              renderPokemonElements(pokemon, i);
@@ -122,14 +126,36 @@ function generatePokemonInfosInnerHTML(i) {
             </div>
             <div class="general_information pad_section">
                 <div class="speaker_position">
-                <div onclick="playAudio()" class="speaker_iconDiv bgText_grassPokemon">
+                <div onclick="playAudio()" id="speaker_iconDiv${i}" class="speaker_iconDiv">
                     <img class="bigPokemon_speaker" src="img/play_icon.png" alt="speaker"/>
                 </div>
                 <audio id="audioSound">
                     <source src="${urlAudio}" type="audio/ogg">
                 </audio>
                 </div>
-                <div class="information_content">stats</div>
+                <!-- First Slide -->
+                <div class="information_content">
+                    <h3 class="headline_stats">stats</h3>
+                    <div class="stat_hp">
+                        <div>hp</div>
+                    </div>
+                    <div class="stat_hp">
+                        <div>attack</div>
+                    </div>
+                    <div class="stat_hp">
+                        <div>defense</div>
+                    </div>
+                    <div class="stat_hp">
+                        <div>special-attack</div>
+                    </div>
+                    <div class="stat_hp">
+                        <div>special-defense</div>
+                    </div>
+                    <div class="stat_hp">
+                        <div>speed</div>
+                    </div>
+                </div>
+                    
             </div>
         </div>`;
 }
@@ -139,3 +165,43 @@ function playAudio() {
     let audioSound = document.querySelector('#audioSound');
     audioSound.play();
 }
+
+
+const config = {
+    type: 'bar',
+    data,
+    options: {
+      indexAxis: 'y',
+    }
+  };
+
+
+  const labels = Utils.months({count: 7});
+  const data = {
+    labels: labels,
+    datasets: [{
+      axis: 'y',
+      label: 'My First Dataset',
+      data: [65, 59, 80, 81, 56, 55, 40],
+      fill: false,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(255, 205, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(201, 203, 207, 0.2)'
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+        'rgb(255, 159, 64)',
+        'rgb(255, 205, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(54, 162, 235)',
+        'rgb(153, 102, 255)',
+        'rgb(201, 203, 207)'
+      ],
+      borderWidth: 1
+    }]
+  };
