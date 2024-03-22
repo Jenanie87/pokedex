@@ -28,6 +28,7 @@ async function renderPokemonInfo() {
         content.innerHTML += generatePokemonCardsInnerHTML(i);
         renderPokemonElements(currentPokemon, i);
         changeBackgroundColor(currentPokemon, i);
+/*         console.log(currentPokemon.abilities); */
     }
     mainContainer.innerHTML += generateButtonNextPokemon();
 }
@@ -83,6 +84,11 @@ function addClassColor(array, i) {
     if (document.querySelector(`#speaker_iconDiv${i}`)) {
         document.querySelector(`#speaker_iconDiv${i}`).classList.add(`bgText_${array.types[0].type.name}Pokemon`);
     }
+    if (document.querySelector(`.arrow_iconDiv${i}`)) {
+        document.querySelectorAll(`.arrow_iconDiv${i}`).forEach((arrowElement) => {
+            arrowElement.classList.add(`bgText_${array.types[0].type.name}Pokemon`);
+        });
+    }
     document.querySelectorAll(`#text_element${i}`).forEach((textElement) => {
         textElement.classList.add(`bgText_${array.types[0].type.name}Pokemon`);
     });
@@ -92,11 +98,10 @@ function addClassColor(array, i) {
 function openBigCard(i) {
     changeBigCard();
     pokemon = fetchedPokemon[i];
-    let currentPokemonSpecies = pokemonSpecies[i];
     console.log(pokemon.abilities[0].ability.name);
 
     let bg_container = document.querySelector('.bg_container');
-    bg_container.innerHTML = generatePokemonInfosInnerHTML(currentPokemonSpecies, pokemon, i);
+    bg_container.innerHTML = generatePokemonInfosInnerHTML(pokemon, i);
     renderPokemonElements(pokemon, i);
     changeBackgroundColor(pokemon, i);
 }
@@ -121,10 +126,11 @@ function doNotClose(event) {
 }
 
 
-function generatePokemonInfosInnerHTML(currentPokemonSpecies, pokemon, i) {
+function generatePokemonInfosInnerHTML(pokemon, i) {
     let urlAudio = pokemon.cries.latest;
 
     return /* HTML */ `
+        <div class="arrow_iconDiv arrow_iconDiv${i}"><img onclick="doNotClose(event)" src="img/arrow_left_icon.svg" alt="arrow left"></div>
         <div onclick="doNotClose(event)" class="pokemon_card_big">
             <div id="top_card${i}" class="top_card pad_section">
                 <h2 class="name">${pokemon['name']}</h2>
@@ -153,7 +159,8 @@ function generatePokemonInfosInnerHTML(currentPokemonSpecies, pokemon, i) {
                         </div>                     
                 </div>              
             </div>
-        </div>`;
+        </div>
+        <div class="arrow_iconDiv arrow_iconDiv${i}"><img onclick="doNotClose(event)" src="img/arrow_right_icon.svg" alt="arrow left"></div>`;
 }
 
 
@@ -219,7 +226,7 @@ function renderStatChart() {
 
 function generateStatsInnerHTML() {
     return /* HTML */`
-    <canvas id="barStats" width="400" height="400"></canvas>`;
+    <canvas id="barStats" width="400" height="250"></canvas>`;
 }
 
 
@@ -250,6 +257,7 @@ function showStatChart() {
             labels: [pokemon.stats[0].stat.name, pokemon.stats[1].stat.name, pokemon.stats[2].stat.name, pokemon.stats[3].stat.name, pokemon.stats[4].stat.name, pokemon.stats[5].stat.name],
             datasets: [{
                 axis: 'y',
+/*                 barPercentage: 1.0, */
                 data: [pokemon.stats[0].base_stat, pokemon.stats[1].base_stat, pokemon.stats[2].base_stat, pokemon.stats[3].base_stat, pokemon.stats[4].base_stat, pokemon.stats[5].base_stat],
                 fill: false,
                 backgroundColor: [

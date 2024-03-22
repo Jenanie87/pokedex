@@ -333,6 +333,7 @@ h2 {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 16px;
 }
 
 .d_none {
@@ -346,7 +347,6 @@ h2 {
     max-width: 520px;
     min-width: 400px;
     width: 50%;
-    cursor: pointer;
 }
 
 .general_information {
@@ -360,10 +360,21 @@ h2 {
     background-color: var(--darkergrey);
 }
 
+.arrow_iconDiv {
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+    width: 56px;
+    align-items: center;
+    opacity: 0.8;
+    cursor: pointer;
+}
+
 .bigPokemon_image {
     margin: 8px 0px;
     width: 250px;
     height: 250px;
+    cursor: pointer;
 }
 
 .bigPokemon_image:hover {
@@ -376,6 +387,7 @@ h2 {
 
 h3 {
     font-size: 24px;
+    cursor: pointer;
 }
 
 .headline_style {
@@ -398,6 +410,7 @@ h3 {
     width: 56px;
     align-items: center;
     opacity: 0.8;
+    cursor: pointer;
 }
 
 .bigPokemon_speaker {
