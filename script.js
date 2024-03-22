@@ -4,6 +4,7 @@ let responseAsJSON;
 let fetchedPokemon = [];
 let pokemonSpecies = [];
 
+
 async function loadPokemon() {
     let url = 'https://pokeapi.co/api/v2/pokemon';
     let response = await fetch(url);
@@ -25,8 +26,8 @@ async function renderPokemonInfo() {
         fetchedPokemon.push(currentPokemon);
         saveInArray(currentPokemon);
         content.innerHTML += generatePokemonCardsInnerHTML(i);
-                             renderPokemonElements(currentPokemon, i);
-                             changeBackgroundColor(currentPokemon, i);
+        renderPokemonElements(currentPokemon, i);
+        changeBackgroundColor(currentPokemon, i);
     }
     mainContainer.innerHTML += generateButtonNextPokemon();
 }
@@ -52,7 +53,7 @@ function renderPokemonElements(array, j) {
     let pokemonElement = document.querySelector(`#pokemon_element${j}`);
     for (let i = 0; i < array['types'].length; i++) {
         const element = array['types'][i];
-        pokemonElement.innerHTML += generatePokemonElementsInnerHTML(j, element); 
+        pokemonElement.innerHTML += generatePokemonElementsInnerHTML(j, element);
     }
 }
 
@@ -79,7 +80,7 @@ function changeBackgroundColor(array, i) {
 function addClassColor(array, i) {
     document.querySelector(`#top_card${i}`).classList.add(`bg_${array.types[0].type.name}Pokemon`);
     document.querySelector(`#pokemon_image${i}`).classList.add(`bg_${array.types[0].type.name}Pokemon`);
-    if(document.querySelector(`#speaker_iconDiv${i}`)) {
+    if (document.querySelector(`#speaker_iconDiv${i}`)) {
         document.querySelector(`#speaker_iconDiv${i}`).classList.add(`bgText_${array.types[0].type.name}Pokemon`);
     }
     document.querySelectorAll(`#text_element${i}`).forEach((textElement) => {
@@ -96,8 +97,8 @@ function openBigCard(i) {
 
     let bg_container = document.querySelector('.bg_container');
     bg_container.innerHTML = generatePokemonInfosInnerHTML(currentPokemonSpecies, pokemon, i);
-                             renderPokemonElements(pokemon, i);
-                             changeBackgroundColor(pokemon, i);
+    renderPokemonElements(pokemon, i);
+    changeBackgroundColor(pokemon, i);
 }
 
 
@@ -144,36 +145,11 @@ function generatePokemonInfosInnerHTML(currentPokemonSpecies, pokemon, i) {
                 </div>
                 <div class="information_content">
                     <div class="headlines">
-                        <h3 id="headline_about" onclick="renderBaseInfos(pokemon)" class="pad_section">About</h3>
-                        <h3 id="headline_stats" onclick="renderStatChart(pokemon)" class="pad_section">Base Stats</h3>
+                        <h3 id="headline_about" onclick="renderBaseInfos(${i})" class="pad_section">About</h3>
+                        <h3 id="headline_stats" onclick="renderStatChart()" class="pad_section">Base Stats</h3>
                     </div>
                         <div class="content_slide pad_section">
                         <!-- Slides -->
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td class="first">Height:</td>
-                                        <td class="second">${convertNumber(pokemon.height)} m</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="first">Weight:</td>
-                                        <td class="second">${convertNumber(pokemon.weight)} kg</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="first">Habitat:</td>
-                                        <td class="second">${currentPokemonSpecies.habitat.name}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="first">Growth-Rate:</td>
-                                        <td class="second">${currentPokemonSpecies.growth_rate.name}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="first">Abilities:</td>
-                                        <td class="second">Ability 1</td>
-                                        <td class="second">Ability 2</td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </div>                     
                 </div>              
             </div>
@@ -192,11 +168,52 @@ function playAudio() {
 }
 
 
-function renderStatChart(pokemon) {
+function renderBaseInfos(i) {
+    pokemon = fetchedPokemon[i];
+    currentPokemonSpecies = pokemonSpecies[i];
+    addClassActiveSlide('#headline_about');
+    removeClassActiveSlide('#headline_stats');
+    let contentStats = document.querySelector('.content_slide');
+    contentStats.innerHTML = generateBaseInfoInnerHTML(pokemon, currentPokemonSpecies);
+}
+
+
+function generateBaseInfoInnerHTML(pokemon, currentPokemonSpecies) {
+    return /* HTML */ `
+        <table>
+            <tbody>
+                <tr>
+                    <td class="first">Height:</td>
+                    <td class="second">${convertNumber(pokemon.height)} m</td>
+                </tr>
+                <tr>
+                    <td class="first">Weight:</td>
+                    <td class="second">${convertNumber(pokemon.weight)} kg</td>
+                </tr>
+                <tr>
+                    <td class="first">Habitat:</td>
+                    <td class="second">${currentPokemonSpecies.habitat.name}</td>
+                </tr>
+                <tr>
+                    <td class="first">Growth-Rate:</td>
+                    <td class="second">${currentPokemonSpecies.growth_rate.name}</td>
+                </tr>
+                <tr>
+                    <td class="first">Abilities:</td>
+                    <td class="second">Ability 1</td>
+                    <td class="second">Ability 2</td>
+                </tr>
+            </tbody>
+        </table>`;
+}
+
+
+function renderStatChart() {
     let contentStats = document.querySelector('.content_slide');
     contentStats.innerHTML = generateStatsInnerHTML();
-    addClassActiveSlide();
-    showStatChart(pokemon);
+    addClassActiveSlide('#headline_stats');
+    removeClassActiveSlide('#headline_about');
+    showStatChart();
 }
 
 
@@ -206,8 +223,13 @@ function generateStatsInnerHTML() {
 }
 
 
-function addClassActiveSlide() {
-    document.querySelector('#headline_stats').classList.toggle('headline_style');
+function addClassActiveSlide(id) {
+    document.querySelector(id).classList.add('headline_style');
+}
+
+
+function removeClassActiveSlide(id) {
+    document.querySelector(id).classList.remove('headline_style');
 }
 
 
@@ -215,7 +237,7 @@ function addClassActiveSlide() {
 Chart.register(ChartDataLabels);
 
 
-function showStatChart(pokemon) {
+function showStatChart() {
     let ctx = document.getElementById('barStats').getContext('2d');
     Chart.defaults.font.size = 16;
     Chart.defaults.color = '#ffffff';
@@ -225,37 +247,37 @@ function showStatChart(pokemon) {
     barStats = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: [pokemon.stats[0].stat.name, pokemon.stats[1].stat.name, pokemon.stats[2].stat.name, pokemon.stats[3].stat.name, pokemon.stats[4].stat.name, pokemon.stats[5].stat.name],
-          datasets: [{
-            axis: 'y',
-            data: [pokemon.stats[0].base_stat, pokemon.stats[1].base_stat, pokemon.stats[2].base_stat, pokemon.stats[3].base_stat, pokemon.stats[4].base_stat, pokemon.stats[5].base_stat],
-            fill: false,
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
-              'rgba(255, 205, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(201, 203, 207, 0.2)'
-            ],
-            borderColor: [
-              'rgb(255, 99, 132)',
-              'rgb(255, 159, 64)',
-              'rgb(255, 205, 86)',
-              'rgb(75, 192, 192)',
-              'rgb(54, 162, 235)',
-              'rgb(153, 102, 255)',
-              'rgb(201, 203, 207)'
-            ],
-            borderWidth: 1
-          }]
+            labels: [pokemon.stats[0].stat.name, pokemon.stats[1].stat.name, pokemon.stats[2].stat.name, pokemon.stats[3].stat.name, pokemon.stats[4].stat.name, pokemon.stats[5].stat.name],
+            datasets: [{
+                axis: 'y',
+                data: [pokemon.stats[0].base_stat, pokemon.stats[1].base_stat, pokemon.stats[2].base_stat, pokemon.stats[3].base_stat, pokemon.stats[4].base_stat, pokemon.stats[5].base_stat],
+                fill: false,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 205, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(201, 203, 207, 0.2)'
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
+                    'rgb(201, 203, 207)'
+                ],
+                borderWidth: 1
+            }]
         },
         options: {
             indexAxis: 'y',
             plugins: [ChartDataLabels]
-        }        
-      });
+        }
+    });
 }
 
 
