@@ -2,6 +2,7 @@ let currentPokemon; // Damit von überall/allen Funktionen auf die Variable zuge
 let selectionPokemon;
 let responseAsJSON;
 let fetchedPokemon = [];
+let pokemonSpecies = [];
 
 async function loadPokemon() {
     let url = 'https://pokeapi.co/api/v2/pokemon';
@@ -22,7 +23,7 @@ async function renderPokemonInfo() {
         let response = await fetch(url);
         currentPokemon = await response.json();
         fetchedPokemon.push(currentPokemon);
-
+        saveInArray(currentPokemon);
         content.innerHTML += generatePokemonCardsInnerHTML(i);
                              renderPokemonElements(currentPokemon, i);
                              changeBackgroundColor(currentPokemon, i);
@@ -43,7 +44,6 @@ function generatePokemonCardsInnerHTML(i) {
           <div id="pokemon_image${i}" class="pokemon_image">
             <img class="img_pokemon" src="${currentPokemon.sprites.other.dream_world.front_default}" alt="pokemon" />
           </div>
-
         </div>`;
 }
 
@@ -90,11 +90,22 @@ function addClassColor(array, i) {
 
 function openBigCard(i) {
     changeBigCard();
+    pokemon = fetchedPokemon[i];
+    let currentPokemonSpecies = pokemonSpecies[i];
+    console.log(pokemon.abilities[0].ability.name);
 
     let bg_container = document.querySelector('.bg_container');
-    bg_container.innerHTML = generatePokemonInfosInnerHTML(i);
+    bg_container.innerHTML = generatePokemonInfosInnerHTML(currentPokemonSpecies, pokemon, i);
                              renderPokemonElements(pokemon, i);
                              changeBackgroundColor(pokemon, i);
+}
+
+
+async function saveInArray(pokemon) {
+    let url = pokemon.species.url;
+    let response = await fetch(url);
+    let currentPokemonSpecies = await response.json();
+    pokemonSpecies.push(currentPokemonSpecies);
 }
 
 
@@ -109,10 +120,9 @@ function doNotClose(event) {
 }
 
 
-function generatePokemonInfosInnerHTML(i) {
-    pokemon = fetchedPokemon[i];
+function generatePokemonInfosInnerHTML(currentPokemonSpecies, pokemon, i) {
     let urlAudio = pokemon.cries.latest;
-    console.log(pokemon.abilities[0].ability.name);
+
     return /* HTML */ `
         <div onclick="doNotClose(event)" class="pokemon_card_big">
             <div id="top_card${i}" class="top_card pad_section">
@@ -134,7 +144,7 @@ function generatePokemonInfosInnerHTML(i) {
                 </div>
                 <div class="information_content">
                     <div class="headlines">
-                        <h3 id="headline_about" class="pad_section">About</h3>
+                        <h3 id="headline_about" onclick="renderBaseInfos(pokemon)" class="pad_section">About</h3>
                         <h3 id="headline_stats" onclick="renderStatChart(pokemon)" class="pad_section">Base Stats</h3>
                     </div>
                         <div class="content_slide pad_section">
@@ -148,6 +158,14 @@ function generatePokemonInfosInnerHTML(i) {
                                     <tr>
                                         <td class="first">Weight:</td>
                                         <td class="second">${convertNumber(pokemon.weight)} kg</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="first">Habitat:</td>
+                                        <td class="second">${currentPokemonSpecies.habitat.name}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="first">Growth-Rate:</td>
+                                        <td class="second">${currentPokemonSpecies.growth_rate.name}</td>
                                     </tr>
                                     <tr>
                                         <td class="first">Abilities:</td>
@@ -236,8 +254,7 @@ function showStatChart(pokemon) {
         options: {
             indexAxis: 'y',
             plugins: [ChartDataLabels]
-        }
-        
+        }        
       });
 }
 
