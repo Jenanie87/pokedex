@@ -334,6 +334,7 @@ h2 {
     justify-content: center;
     align-items: center;
     gap: 16px;
+    z-index: 1;
 }
 
 .d_none {
@@ -423,5 +424,5 @@ h3 {
 }
 
 .second {
-    padding-left: 24px;
+    padding-left: 8px;
 }

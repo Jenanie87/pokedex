@@ -98,7 +98,6 @@ function addClassColor(array, i) {
 function openBigCard(i) {
     changeBigCard();
     pokemon = fetchedPokemon[i];
-    console.log(pokemon.abilities[0].ability.name);
 
     let bg_container = document.querySelector('.bg_container');
     bg_container.innerHTML = generatePokemonInfosInnerHTML(pokemon, i);
@@ -116,8 +115,10 @@ async function saveInArray(pokemon) {
 
 
 function changeBigCard() {
-    let bg_container = document.querySelector('.bg_container');
-    bg_container.classList.toggle('d_none');
+    if(!document.querySelector('.bg_container').classList.contains('makeSwipeable')) {
+        let bg_container = document.querySelector('.bg_container');
+        bg_container.classList.toggle('d_none');
+    }
 }
 
 
@@ -130,7 +131,7 @@ function generatePokemonInfosInnerHTML(pokemon, i) {
     let urlAudio = pokemon.cries.latest;
 
     return /* HTML */ `
-        <div class="arrow_iconDiv arrow_iconDiv${i}"><img onclick="doNotClose(event)" src="img/arrow_left_icon.svg" alt="arrow left"></div>
+        <div class="arrow_iconDiv arrow_iconDiv${i}"><img onclick="doNotClose(event); switchLeft(${i})" src="img/arrow_left_icon.svg" alt="arrow left"></div>
         <div onclick="doNotClose(event)" class="pokemon_card_big">
             <div id="top_card${i}" class="top_card pad_section">
                 <h2 class="name">${pokemon['name']}</h2>
@@ -160,7 +161,7 @@ function generatePokemonInfosInnerHTML(pokemon, i) {
                 </div>              
             </div>
         </div>
-        <div class="arrow_iconDiv arrow_iconDiv${i}"><img onclick="doNotClose(event)" src="img/arrow_right_icon.svg" alt="arrow left"></div>`;
+        <div class="arrow_iconDiv arrow_iconDiv${i}"><img onclick="doNotClose(event); switchRight(${i})" src="img/arrow_right_icon.svg" alt="arrow left"></div>`;
 }
 
 
@@ -171,9 +172,9 @@ function convertNumber(number) {
 
 function playAudio() {
     let audioSound = document.querySelector('#audioSound');
+    audioSound.volume = 0.1;
     audioSound.play();
 }
-
 
 function renderBaseInfos(i) {
     pokemon = fetchedPokemon[i];
@@ -182,6 +183,7 @@ function renderBaseInfos(i) {
     removeClassActiveSlide('#headline_stats');
     let contentStats = document.querySelector('.content_slide');
     contentStats.innerHTML = generateBaseInfoInnerHTML(pokemon, currentPokemonSpecies);
+    renderPokemonAbilities(pokemon);
 }
 
 
@@ -205,13 +207,24 @@ function generateBaseInfoInnerHTML(pokemon, currentPokemonSpecies) {
                     <td class="first">Growth-Rate:</td>
                     <td class="second">${currentPokemonSpecies.growth_rate.name}</td>
                 </tr>
-                <tr>
+                <tr class=table_abilities>
                     <td class="first">Abilities:</td>
-                    <td class="second">Ability 1</td>
-                    <td class="second">Ability 2</td>
+                    <!-- render abilities for-Schleife -->
                 </tr>
             </tbody>
         </table>`;
+}
+
+
+function renderPokemonAbilities(pokemon) {
+    let abilities = document.querySelector('.table_abilities');
+
+    for (let i = 0; i < pokemon['abilities'].length; i++) {
+        const pokemonAbility = pokemon.abilities[i];
+        abilities.innerHTML += `<td class="second">${pokemonAbility.ability.name}</td>`;
+        console.log(pokemonAbility.ability.name);
+        
+    }
 }
 
 
@@ -289,3 +302,23 @@ function showStatChart() {
 }
 
 
+function switchRight(index) {
+    document.querySelector('.bg_container').classList.add('makeSwipeable'); // Z118-121 - Ich füge hier beim Klick auf den Pfeil eine Pseudoklasse hinzu, die in der Funktion changeBigCard() geprüft wird und nur getoggelt wird wenn die Klasse nicht vorhanden ist, damit beim Klick auf den Pfeil die BigCard nicht geschlossen wird
+    index++;
+    if(index >= selectionPokemon.length) {
+        index = 0;
+    }
+    openBigCard(index);
+    document.querySelector('.bg_container').classList.remove('makeSwipeable'); // Damit wieder die Klasse d_none getoggelt werden kann, wird die Pseudoklasse nach dem Ausführen der Funktion openBigCard() wieder entfernt
+}
+
+
+function switchLeft(index) {
+    document.querySelector('.bg_container').classList.add('makeSwipeable');
+    index--;
+    if(index < 0) {
+        index = selectionPokemon.length -1;
+    }
+    openBigCard(index);
+    document.querySelector('.bg_container').classList.remove('makeSwipeable');
+}
