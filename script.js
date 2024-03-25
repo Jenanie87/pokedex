@@ -207,24 +207,42 @@ function generateBaseInfoInnerHTML(pokemon, currentPokemonSpecies) {
                     <td class="first">Growth-Rate:</td>
                     <td class="second">${currentPokemonSpecies.growth_rate.name}</td>
                 </tr>
-                <tr class=table_abilities>
-                    <td class="first">Abilities:</td>
-                    <!-- render abilities for-Schleife -->
+                <tr class="table_abilities">
+                        <!-- render first ability -->
                 </tr>
+                <tbody class="next_abilities">
+                        <!-- render next abilities for-Schleife -->
+                </tbody>
             </tbody>
         </table>`;
 }
 
 
 function renderPokemonAbilities(pokemon) {
-    let abilities = document.querySelector('.table_abilities');
+    let tableAbilities = document.querySelector('.table_abilities');
+    let nextAbilities = document.querySelector('.next_abilities');
+    tableAbilities.innerHTML += generateFirstAbilityInnerHTML(pokemon);
 
-    for (let i = 0; i < pokemon['abilities'].length; i++) {
+    for (let i = 1; i < pokemon['abilities'].length; i++) {
         const pokemonAbility = pokemon.abilities[i];
-        abilities.innerHTML += `<td class="second">${pokemonAbility.ability.name}</td>`;
-        console.log(pokemonAbility.ability.name);
-        
+        nextAbilities.innerHTML += generateNextAbilityInnerHTML(pokemonAbility);        
     }
+}
+
+
+function generateFirstAbilityInnerHTML(pokemon) {
+    return /* HTML */ `
+        <td class="first">Abilities:</td>
+        <td class="second">${pokemon.abilities[0].ability.name}</td>`;
+}
+
+
+function generateNextAbilityInnerHTML(pokemonAbility) {
+    return /* HTML */ `
+        <tr>
+            <td class="first"></td>
+            <td class="second">${pokemonAbility.ability.name}</td>
+        </tr>`;
 }
 
 

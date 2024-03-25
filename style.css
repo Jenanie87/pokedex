@@ -426,3 +426,39 @@ h3 {
 .second {
     padding-left: 8px;
 }
+
+
+@media(max-width: 570px) {
+    .bg_container {
+        flex-direction: column;
+    }
+    .pokemon_card_big {
+        min-width: 0;
+        width: 90%;
+    }
+}
+
+@media(max-width: 560px) {
+    .logo {
+        width: 95%;
+    }
+}
+
+@media(max-width: 440px) {
+    h3 {
+        font-size: 16px;
+    }
+    .speaker_iconDiv {
+        width: 48px;
+    }
+    .bigPokemon_speaker {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media(max-width: 350px) {
+    .speaker_iconDiv {
+        opacity: 0.6;
+    }
+}
