@@ -350,6 +350,10 @@ h2 {
     width: 50%;
 }
 
+canvas {
+    width: 500px;
+}
+
 .general_information {
     margin-top: -56px;
     padding-top: 40px;
@@ -427,7 +431,6 @@ h3 {
     padding-left: 8px;
 }
 
-
 @media(max-width: 570px) {
     .bg_container {
         flex-direction: column;
@@ -445,9 +448,6 @@ h3 {
 }
 
 @media(max-width: 440px) {
-    h3 {
-        font-size: 16px;
-    }
     .speaker_iconDiv {
         width: 48px;
     }
@@ -460,5 +460,17 @@ h3 {
 @media(max-width: 350px) {
     .speaker_iconDiv {
         opacity: 0.6;
+    }
+}
+
+@media(max-width: 390px) {
+    h3 {
+        font-size: 20px;
+    }
+}
+
+@media(max-width: 340px) {
+    h3 {
+        font-size: 18px;
     }
 }

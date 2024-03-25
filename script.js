@@ -257,7 +257,7 @@ function renderStatChart() {
 
 function generateStatsInnerHTML() {
     return /* HTML */`
-    <canvas id="barStats" width="400" height="250"></canvas>`;
+    <canvas id="barStats"></canvas>`;
 }
 
 
@@ -288,7 +288,6 @@ function showStatChart() {
             labels: [pokemon.stats[0].stat.name, pokemon.stats[1].stat.name, pokemon.stats[2].stat.name, pokemon.stats[3].stat.name, pokemon.stats[4].stat.name, pokemon.stats[5].stat.name],
             datasets: [{
                 axis: 'y',
-/*                 barPercentage: 1.0, */
                 data: [pokemon.stats[0].base_stat, pokemon.stats[1].base_stat, pokemon.stats[2].base_stat, pokemon.stats[3].base_stat, pokemon.stats[4].base_stat, pokemon.stats[5].base_stat],
                 fill: false,
                 backgroundColor: [
@@ -314,7 +313,8 @@ function showStatChart() {
         },
         options: {
             indexAxis: 'y',
-            plugins: [ChartDataLabels]
+            plugins: [ChartDataLabels],
+            aspectRatio: 1 / 2,
         }
     });
 }
