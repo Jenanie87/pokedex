@@ -71,6 +71,33 @@ body {
     height: 200px;
 }
 
+.searchbar {
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+}
+
+.input_searchPokemon {
+    border: none;
+    border-radius: 16px;
+    font-size: 18px;
+    background-image: url(img/search_icon.svg);
+    background-repeat: no-repeat;
+    background-position: 8px;
+    padding-left: 56px;
+    background-color: var(--lightgrey);
+    color: var(--darkgrey);
+}
+
+.input_searchPokemon::placeholder {
+    color: gainsboro;
+}
+
+.input_searchPokemon:focus {
+    outline: none;
+    border: 2px solid var(--yellow);
+}
+
 #main_container {
     max-width: 1920px;
     width: 100%;
@@ -311,6 +338,28 @@ h2 {
     transition: all 175ms cubic-bezier(0, 0, 1, 1); */
     box-shadow: 0 0 0 2px var(--red), 0 0.75em 0 0 var(--red);
     cursor: pointer;
+}
+
+.btn_pokemon:hover {
+    background-color: var(--red);
+    box-shadow: 0 0 0 2px var(--darkred), 0 0.75em 0 0 var(--darkred);
+}
+
+.btn_search {
+    font-family: 'Pokemon Solid';
+    text-shadow: 2px 2px 3px var(--darkgrey);
+    color: var(--lightgrey);
+    background-color: var(--darkred);
+    font-size: 24px;
+    border: 2px solid var(--darkergrey);
+    border-radius: 24px;
+    cursor: pointer;
+    box-shadow: 0 0 0 2px var(--red), 0 0.25em 0 0 var(--red);
+}
+
+.btn_search:hover {
+    background-color: var(--red);
+    box-shadow: 0 0 0 2px var(--darkred), 0 0.25em 0 0 var(--darkred);
 }
 
 .btn_pokemon::before {
