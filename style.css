@@ -431,9 +431,14 @@ h3 {
     padding-left: 8px;
 }
 
+.content_slide {
+    padding: 8px 16px;
+}
+
 @media(max-width: 570px) {
     .bg_container {
         flex-direction: column;
+        gap: 8px;
     }
     .pokemon_card_big {
         min-width: 0;
@@ -454,6 +459,17 @@ h3 {
     .bigPokemon_speaker {
         width: 40px;
         height: 40px;
+    }
+    .bigPokemon_image {
+        margin: 0;
+        width: 200px;
+        height: 200px;
+    }
+    .content_slide {
+        padding: 0;
+    }
+    .arrow_img {
+        width: 40px;
     }
 }
 

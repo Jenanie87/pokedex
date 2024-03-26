@@ -1,6 +1,7 @@
 let currentPokemon; // Damit von überall/allen Funktionen auf die Variable zugegriffen werden kann
 let selectionPokemon;
 let responseAsJSON;
+let countRender = 0;
 let fetchedPokemon = [];
 let pokemonSpecies = [];
 
@@ -25,12 +26,14 @@ async function renderPokemonInfo() {
         currentPokemon = await response.json();
         fetchedPokemon.push(currentPokemon);
         saveInArray(currentPokemon);
-        content.innerHTML += generatePokemonCardsInnerHTML(i);
-        renderPokemonElements(currentPokemon, i);
-        changeBackgroundColor(currentPokemon, i);
-/*         console.log(currentPokemon.abilities); */
+        content.innerHTML += generatePokemonCardsInnerHTML(i+countRender);
+        renderPokemonElements(currentPokemon, i+countRender);
+        changeBackgroundColor(currentPokemon, i+countRender);
     }
-    mainContainer.innerHTML += generateButtonNextPokemon();
+    if(!document.querySelector('.btn_pokemon')) { // Prüft ob der Button noch nicht vorhanden ist und falls dieser noch nicht vorhanden ist wird die nächste Zeile ausgeführt und der Button generiert, ansonsten nicht
+        mainContainer.innerHTML += generateButtonNextPokemon();
+    }
+
 }
 
 
@@ -68,7 +71,7 @@ function generatePokemonElementsInnerHTML(j, element) {
 function generateButtonNextPokemon() {
     return /* HTML */`
         <div>
-            <button onclick="renderNextPokemonInfo(responseAsJSON)" class="btn_pokemon">Next Pokèmon</button>
+            <button onclick="showNextPokemon()" class="btn_pokemon">Next Pokèmon</button>
         </div>`;
 }
 
@@ -131,7 +134,7 @@ function generatePokemonInfosInnerHTML(pokemon, i) {
     let urlAudio = pokemon.cries.latest;
 
     return /* HTML */ `
-        <div class="arrow_iconDiv arrow_iconDiv${i}"><img onclick="doNotClose(event); switchLeft(${i})" src="img/arrow_left_icon.svg" alt="arrow left"></div>
+        <div class="arrow_iconDiv arrow_iconDiv${i}"><img class="arrow_img" onclick="doNotClose(event); switchLeft(${i})" src="img/arrow_left_icon.svg" alt="arrow left"></div>
         <div onclick="doNotClose(event)" class="pokemon_card_big">
             <div id="top_card${i}" class="top_card pad_section">
                 <h2 class="name">${pokemon['name']}</h2>
@@ -155,13 +158,13 @@ function generatePokemonInfosInnerHTML(pokemon, i) {
                         <h3 id="headline_about" onclick="renderBaseInfos(${i})" class="pad_section">About</h3>
                         <h3 id="headline_stats" onclick="renderStatChart()" class="pad_section">Base Stats</h3>
                     </div>
-                        <div class="content_slide pad_section">
+                        <div class="content_slide">
                         <!-- Slides -->
                         </div>                     
                 </div>              
             </div>
         </div>
-        <div class="arrow_iconDiv arrow_iconDiv${i}"><img onclick="doNotClose(event); switchRight(${i})" src="img/arrow_right_icon.svg" alt="arrow left"></div>`;
+        <div class="arrow_iconDiv arrow_iconDiv${i}"><img class="arrow_img" onclick="doNotClose(event); switchRight(${i})" src="img/arrow_right_icon.svg" alt="arrow left"></div>`;
 }
 
 
@@ -191,6 +194,10 @@ function generateBaseInfoInnerHTML(pokemon, currentPokemonSpecies) {
     return /* HTML */ `
         <table>
             <tbody>
+                <tr>
+                    <td class="first">Species:</td>
+                    <td class="second">${currentPokemonSpecies.genera[7].genus}</td>
+                </tr>
                 <tr>
                     <td class="first">Height:</td>
                     <td class="second">${convertNumber(pokemon.height)} m</td>
@@ -257,7 +264,7 @@ function renderStatChart() {
 
 function generateStatsInnerHTML() {
     return /* HTML */`
-    <canvas id="barStats"></canvas>`;
+        <canvas id="barStats"></canvas>`;
 }
 
 
@@ -285,7 +292,7 @@ function showStatChart() {
     barStats = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: [pokemon.stats[0].stat.name, pokemon.stats[1].stat.name, pokemon.stats[2].stat.name, pokemon.stats[3].stat.name, pokemon.stats[4].stat.name, pokemon.stats[5].stat.name],
+            labels: [pokemon.stats[0].stat.name, pokemon.stats[1].stat.name, pokemon.stats[2].stat.name, "Special-\nAttack", pokemon.stats[4].stat.name, pokemon.stats[5].stat.name],
             datasets: [{
                 axis: 'y',
                 data: [pokemon.stats[0].base_stat, pokemon.stats[1].base_stat, pokemon.stats[2].base_stat, pokemon.stats[3].base_stat, pokemon.stats[4].base_stat, pokemon.stats[5].base_stat],
@@ -314,16 +321,23 @@ function showStatChart() {
         options: {
             indexAxis: 'y',
             plugins: [ChartDataLabels],
-            aspectRatio: 1 / 2,
+            maintainAspectRatio: false
+        },
+        scales: {
+            y: {
+                ticks: {
+                    callback: val => [val.slice(x,y), val.slice(y)], 
+                }
+            }
         }
     });
 }
 
 
 function switchRight(index) {
-    document.querySelector('.bg_container').classList.add('makeSwipeable'); // Z118-121 - Ich füge hier beim Klick auf den Pfeil eine Pseudoklasse hinzu, die in der Funktion changeBigCard() geprüft wird und nur getoggelt wird wenn die Klasse nicht vorhanden ist, damit beim Klick auf den Pfeil die BigCard nicht geschlossen wird
+    document.querySelector('.bg_container').classList.add('makeSwipeable'); // Z120-123 - Ich füge hier beim Klick auf den Pfeil eine Pseudoklasse hinzu, die in der Funktion changeBigCard() geprüft wird und nur getoggelt wird wenn die Klasse nicht vorhanden ist, damit beim Klick auf den Pfeil die BigCard nicht geschlossen wird
     index++;
-    if(index >= selectionPokemon.length) {
+    if(index >= selectionPokemon.length + countRender) {
         index = 0;
     }
     openBigCard(index);
@@ -335,8 +349,19 @@ function switchLeft(index) {
     document.querySelector('.bg_container').classList.add('makeSwipeable');
     index--;
     if(index < 0) {
-        index = selectionPokemon.length -1;
+        index = selectionPokemon.length + countRender -1;
     }
     openBigCard(index);
     document.querySelector('.bg_container').classList.remove('makeSwipeable');
+}
+
+
+async function showNextPokemon() {
+    let nextUrl = responseAsJSON.next;
+    let response = await fetch(nextUrl);
+    let nextResponseAsJson = await response.json();
+    selectionPokemon = nextResponseAsJson.results;
+    responseAsJSON = nextResponseAsJson;
+    countRender+= 20;
+    renderPokemonInfo();
 }
