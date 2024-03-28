@@ -51,6 +51,7 @@ function generatePokemonCardsInnerHTML(i) {
             </div>
           </div>
           <div id="pokemon_image${i}" class="pokemon_image">
+          
           </div>
         </div>`;
 }
