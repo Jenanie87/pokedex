@@ -2,6 +2,7 @@ let currentPokemon; // Damit von überall/allen Funktionen auf die Variable zuge
 let selectionPokemon;
 let responseAsJSON;
 let countRender = 0;
+let searchPokemons = [];
 let fetchedPokemon = [];
 let pokemonSpecies = [];
 
@@ -18,6 +19,7 @@ async function loadPokemon() {
 async function renderPokemonInfo() {
     let content = document.querySelector('#content');
     let mainContainer = document.querySelector('#main_container');
+    content.innerHTML = '';
 
     for (let i = 0; i < selectionPokemon.length; i++) {
         const pokemon = selectionPokemon[i];
@@ -27,8 +29,10 @@ async function renderPokemonInfo() {
         fetchedPokemon.push(currentPokemon);
         saveInArray(currentPokemon);
         content.innerHTML += generatePokemonCardsInnerHTML(i+countRender);
+        showImage(i);
         renderPokemonElements(currentPokemon, i+countRender);
         changeBackgroundColor(currentPokemon, i+countRender);
+
     }
     if(!document.querySelector('.btn_pokemon')) { // Prüft ob der Button noch nicht vorhanden ist und falls dieser noch nicht vorhanden ist wird die nächste Zeile ausgeführt und der Button generiert, ansonsten nicht
         mainContainer.innerHTML += generateButtonNextPokemon();
@@ -47,10 +51,21 @@ function generatePokemonCardsInnerHTML(i) {
             </div>
           </div>
           <div id="pokemon_image${i}" class="pokemon_image">
-            <img class="img_pokemon" src="${currentPokemon.sprites.other.dream_world.front_default}" alt="pokemon" />
           </div>
         </div>`;
 }
+
+
+function showImage(index) {
+    let pokemonImage = document.querySelector(`#pokemon_image${index}`);
+
+        if (currentPokemon.sprites.other.dream_world.front_default) {
+            pokemonImage.innerHTML += `<img class="img_pokemon" src="${currentPokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>`;
+        } else {
+            pokemonImage.innerHTML += `<img class="img_pokemon" src="${currentPokemon.sprites.other['official-artwork'].front_default}" alt="pokemon"/>`;
+        } 
+    }
+
 
 
 function renderPokemonElements(array, j) {
@@ -323,13 +338,6 @@ function showStatChart() {
             plugins: [ChartDataLabels],
             maintainAspectRatio: false
         },
-        scales: {
-            y: {
-                ticks: {
-                    callback: val => [val.slice(x,y), val.slice(y)], 
-                }
-            }
-        }
     });
 }
 
@@ -364,4 +372,34 @@ async function showNextPokemon() {
     responseAsJSON = nextResponseAsJson;
     countRender+= 20;
     renderPokemonInfo();
+}
+
+
+function filterNames() {
+    let search = document.querySelector('.input_searchPokemon').value;
+    if(search.length > 0) {
+        search = search.toLowerCase();
+        renderSearchPokemon(search);
+        document.querySelector('.input_searchPokemon').value = "";
+    } else {
+        loadPokemon();
+    }
+}
+
+
+async function renderSearchPokemon(search) {
+    let url = 'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0';
+    let response = await fetch(url);
+    let responseAsJSON = await response.json();
+    selectionPokemon = responseAsJSON.results;
+    for (let i = 0; i < selectionPokemon.length; i++) {
+        const searchPokemon = selectionPokemon[i]['name'];
+        if(searchPokemon.toLowerCase().includes(search)) {
+            let searchPokemonIndex = selectionPokemon.findIndex(pokemon => pokemon.name == searchPokemon);
+            searchPokemons.push(selectionPokemon[searchPokemonIndex]);
+        }
+    }
+    selectionPokemon = searchPokemons;
+    renderPokemonInfo();
+    searchPokemons = [];
 }
