@@ -19,7 +19,6 @@ async function loadPokemon() {
 async function renderPokemonInfo() {
     let content = document.querySelector('#content');
     let mainContainer = document.querySelector('#main_container');
-    content.innerHTML = '';
 
     for (let i = 0; i < selectionPokemon.length; i++) {
         const pokemon = selectionPokemon[i];
@@ -27,9 +26,9 @@ async function renderPokemonInfo() {
         let response = await fetch(url);
         currentPokemon = await response.json();
         fetchedPokemon.push(currentPokemon);
-        saveInArray(currentPokemon);
+        saveInArray(currentPokemon); // Damit die Daten in About schneller geladen werden
         content.innerHTML += generatePokemonCardsInnerHTML(i+countRender);
-        showImage(i);
+        showImage(i + countRender);
         renderPokemonElements(currentPokemon, i+countRender);
         changeBackgroundColor(currentPokemon, i+countRender);
 
@@ -37,23 +36,6 @@ async function renderPokemonInfo() {
     if(!document.querySelector('.btn_pokemon')) { // Prüft ob der Button noch nicht vorhanden ist und falls dieser noch nicht vorhanden ist wird die nächste Zeile ausgeführt und der Button generiert, ansonsten nicht
         mainContainer.innerHTML += generateButtonNextPokemon();
     }
-
-}
-
-
-function generatePokemonCardsInnerHTML(i) {
-    return /* HTML */ `
-        <div onclick="openBigCard(${i})" class="pokemon_card">
-              <div id="top_card${i}" class="top_card pad_section">
-            <h2 class="name">${currentPokemon['name']}</h2>
-            <div class="id">#${currentPokemon['id']}</div>
-            <div id="pokemon_element${i}" class="pokemon_element">
-            </div>
-          </div>
-          <div id="pokemon_image${i}" class="pokemon_image">
-          
-          </div>
-        </div>`;
 }
 
 
@@ -68,27 +50,12 @@ function showImage(index) {
     }
 
 
-
 function renderPokemonElements(array, j) {
     let pokemonElement = document.querySelector(`#pokemon_element${j}`);
     for (let i = 0; i < array['types'].length; i++) {
         const element = array['types'][i];
         pokemonElement.innerHTML += generatePokemonElementsInnerHTML(j, element);
     }
-}
-
-
-function generatePokemonElementsInnerHTML(j, element) {
-    return /* HTML */ `
-        <p id="text_element${j}" class="text_element">${element.type.name}</p>`;
-}
-
-
-function generateButtonNextPokemon() {
-    return /* HTML */`
-        <div>
-            <button onclick="showNextPokemon()" class="btn_pokemon">Next Pokèmon</button>
-        </div>`;
 }
 
 
@@ -117,12 +84,23 @@ function addClassColor(array, i) {
 function openBigCard(i) {
     changeBigCard();
     pokemon = fetchedPokemon[i];
-
     let bg_container = document.querySelector('.bg_container');
     bg_container.innerHTML = generatePokemonInfosInnerHTML(pokemon, i);
+    showBigImage(i + countRender);   
     renderPokemonElements(pokemon, i);
     changeBackgroundColor(pokemon, i);
 }
+
+
+function showBigImage(index) {
+    let pokemonImage = document.querySelector(`#pokemon_image${index}`);
+
+        if (pokemon.sprites.other.dream_world.front_default) {
+            pokemonImage.innerHTML = `<img class="bigPokemon_image" src="${pokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>`;
+        } else {
+            pokemonImage.innerHTML = `<img class="bigPokemon_image" src="${pokemon.sprites.other['official-artwork'].front_default}" alt="pokemon"/>`;
+        } 
+    }
 
 
 async function saveInArray(pokemon) {
@@ -143,44 +121,6 @@ function changeBigCard() {
 
 function doNotClose(event) {
     event.stopPropagation();
-}
-
-
-function generatePokemonInfosInnerHTML(pokemon, i) {
-    let urlAudio = pokemon.cries.latest;
-
-    return /* HTML */ `
-        <div class="arrow_iconDiv arrow_iconDiv${i}"><img class="arrow_img" onclick="doNotClose(event); switchLeft(${i})" src="img/arrow_left_icon.svg" alt="arrow left"></div>
-        <div onclick="doNotClose(event)" class="pokemon_card_big">
-            <div id="top_card${i}" class="top_card pad_section">
-                <h2 class="name">${pokemon['name']}</h2>
-                <div class="id">#${pokemon['id']}</div>
-                <div id="pokemon_element${i}" class="pokemon_element"></div>
-            </div>
-            <div id="pokemon_image${i}" class="pokemon_image">
-                <img class="bigPokemon_image" src="${pokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>
-            </div>
-            <div class="general_information pad_section">
-                <div class="speaker_position">
-                <div onclick="playAudio()" id="speaker_iconDiv${i}" class="speaker_iconDiv">
-                    <img class="bigPokemon_speaker" src="img/play_icon.png" alt="speaker"/>
-                </div>
-                <audio id="audioSound">
-                    <source src="${urlAudio}" type="audio/ogg">
-                </audio>
-                </div>
-                <div class="information_content">
-                    <div class="headlines">
-                        <h3 id="headline_about" onclick="renderBaseInfos(${i})" class="pad_section">About</h3>
-                        <h3 id="headline_stats" onclick="renderStatChart()" class="pad_section">Base Stats</h3>
-                    </div>
-                        <div class="content_slide">
-                        <!-- Slides -->
-                        </div>                     
-                </div>              
-            </div>
-        </div>
-        <div class="arrow_iconDiv arrow_iconDiv${i}"><img class="arrow_img" onclick="doNotClose(event); switchRight(${i})" src="img/arrow_right_icon.svg" alt="arrow left"></div>`;
 }
 
 
@@ -206,41 +146,6 @@ function renderBaseInfos(i) {
 }
 
 
-function generateBaseInfoInnerHTML(pokemon, currentPokemonSpecies) {
-    return /* HTML */ `
-        <table>
-            <tbody>
-                <tr>
-                    <td class="first">Species:</td>
-                    <td class="second">${currentPokemonSpecies.genera[7].genus}</td>
-                </tr>
-                <tr>
-                    <td class="first">Height:</td>
-                    <td class="second">${convertNumber(pokemon.height)} m</td>
-                </tr>
-                <tr>
-                    <td class="first">Weight:</td>
-                    <td class="second">${convertNumber(pokemon.weight)} kg</td>
-                </tr>
-                <tr>
-                    <td class="first">Habitat:</td>
-                    <td class="second">${currentPokemonSpecies.habitat.name}</td>
-                </tr>
-                <tr>
-                    <td class="first">Growth-Rate:</td>
-                    <td class="second">${currentPokemonSpecies.growth_rate.name}</td>
-                </tr>
-                <tr class="table_abilities">
-                        <!-- render first ability -->
-                </tr>
-                <tbody class="next_abilities">
-                        <!-- render next abilities for-Schleife -->
-                </tbody>
-            </tbody>
-        </table>`;
-}
-
-
 function renderPokemonAbilities(pokemon) {
     let tableAbilities = document.querySelector('.table_abilities');
     let nextAbilities = document.querySelector('.next_abilities');
@@ -253,34 +158,12 @@ function renderPokemonAbilities(pokemon) {
 }
 
 
-function generateFirstAbilityInnerHTML(pokemon) {
-    return /* HTML */ `
-        <td class="first">Abilities:</td>
-        <td class="second">${pokemon.abilities[0].ability.name}</td>`;
-}
-
-
-function generateNextAbilityInnerHTML(pokemonAbility) {
-    return /* HTML */ `
-        <tr>
-            <td class="first"></td>
-            <td class="second">${pokemonAbility.ability.name}</td>
-        </tr>`;
-}
-
-
 function renderStatChart() {
     let contentStats = document.querySelector('.content_slide');
     contentStats.innerHTML = generateStatsInnerHTML();
     addClassActiveSlide('#headline_stats');
     removeClassActiveSlide('#headline_about');
     showStatChart();
-}
-
-
-function generateStatsInnerHTML() {
-    return /* HTML */`
-        <canvas id="barStats"></canvas>`;
 }
 
 
@@ -308,7 +191,7 @@ function showStatChart() {
     barStats = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: [pokemon.stats[0].stat.name, pokemon.stats[1].stat.name, pokemon.stats[2].stat.name, "Special-\nAttack", pokemon.stats[4].stat.name, pokemon.stats[5].stat.name],
+            labels: [pokemon.stats[0].stat.name, pokemon.stats[1].stat.name, pokemon.stats[2].stat.name, pokemon.stats[3].stat.name, pokemon.stats[4].stat.name, pokemon.stats[5].stat.name],
             datasets: [{
                 axis: 'y',
                 data: [pokemon.stats[0].base_stat, pokemon.stats[1].base_stat, pokemon.stats[2].base_stat, pokemon.stats[3].base_stat, pokemon.stats[4].base_stat, pokemon.stats[5].base_stat],
@@ -344,7 +227,7 @@ function showStatChart() {
 
 
 function switchRight(index) {
-    document.querySelector('.bg_container').classList.add('makeSwipeable'); // Z120-123 - Ich füge hier beim Klick auf den Pfeil eine Pseudoklasse hinzu, die in der Funktion changeBigCard() geprüft wird und nur getoggelt wird wenn die Klasse nicht vorhanden ist, damit beim Klick auf den Pfeil die BigCard nicht geschlossen wird
+    document.querySelector('.bg_container').classList.add('makeSwipeable'); // Z146-151 - Ich füge hier beim Klick auf den Pfeil eine Pseudoklasse hinzu, die in der Funktion changeBigCard() geprüft wird und nur getoggelt wird wenn die Klasse nicht vorhanden ist, damit beim Klick auf den Pfeil die BigCard nicht geschlossen wird
     index++;
     if(index >= selectionPokemon.length + countRender) {
         index = 0;
@@ -378,21 +261,28 @@ async function showNextPokemon() {
 
 function filterNames() {
     let search = document.querySelector('.input_searchPokemon').value;
-    if(search.length > 0) {
+    if(search.length > 2) {
         search = search.toLowerCase();
         renderSearchPokemon(search);
         document.querySelector('.input_searchPokemon').value = "";
+        document.querySelector('.btn_pokemon').classList.add('d_none'); // versteckt den button bei den searchPokemon
     } else {
+        resetContainer()
+        countRender = 0;
+        resetArrays()
+        document.querySelector('.btn_pokemon').classList.remove('d_none');
         loadPokemon();
     }
 }
 
 
 async function renderSearchPokemon(search) {
+    resetArrays()
     let url = 'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0';
     let response = await fetch(url);
     let responseAsJSON = await response.json();
     selectionPokemon = responseAsJSON.results;
+    resetContainer()
     for (let i = 0; i < selectionPokemon.length; i++) {
         const searchPokemon = selectionPokemon[i]['name'];
         if(searchPokemon.toLowerCase().includes(search)) {
@@ -403,4 +293,16 @@ async function renderSearchPokemon(search) {
     selectionPokemon = searchPokemons;
     renderPokemonInfo();
     searchPokemons = [];
+}
+
+
+function resetArrays() {
+    fetchedPokemon = [];
+    pokemonSpecies = [];
+}
+
+
+function resetContainer() {
+    let content = document.querySelector('#content');
+    content.innerHTML = '';
 }
