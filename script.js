@@ -16,11 +16,11 @@ async function loadPokemon() {
 }
 
 
-async function renderPokemonInfo() {
+async function renderPokemonInfo(amount = selectionPokemon.length) { // amount = selectionPokemon.length -> Wenn kein Argument übergeben wird, wird der Default Parameter gewählt (hier selectionPokemon.length), ansonsten wird der Parameter (hier: selectionPokemon.length) überschrieben und eine andere Länge ausgewählt
     let content = document.querySelector('#content');
     let mainContainer = document.querySelector('#main_container');
 
-    for (let i = 0; i < selectionPokemon.length; i++) {
+    for (let i = 0; i < amount; i++) {
         const pokemon = selectionPokemon[i];
         let url = pokemon.url;
         let response = await fetch(url);
@@ -84,19 +84,20 @@ function addClassColor(array, i) {
 function openBigCard(i) {
     changeBigCard();
     pokemon = fetchedPokemon[i];
+    console.log(pokemon);
     let bg_container = document.querySelector('.bg_container');
     bg_container.innerHTML = generatePokemonInfosInnerHTML(pokemon, i);
-    showBigImage(i + countRender);   
+    showBigImage(i, pokemon);   
     renderPokemonElements(pokemon, i);
     changeBackgroundColor(pokemon, i);
 }
 
 
-function showBigImage(index) {
+function showBigImage(index, pokemon) {
     let pokemonImage = document.querySelector(`#pokemon_image${index}`);
 
         if (preferredImageIsFound(pokemon)) {
-            pokemonImage.innerHTML = `<img class="bigPokemon_image" src="${pokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>`;
+            pokemonImage.innerHTML += `<img class="bigPokemon_image" src="${pokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>`;
         } else {
             pokemonImage.innerHTML = `<img class="bigPokemon_image" src="${pokemon.sprites.other['official-artwork'].front_default}" alt="pokemon"/>`;
         } 
@@ -112,7 +113,7 @@ async function saveInArray(pokemon) {
 
 
 function changeBigCard() {
-    if(certainClassIsNotPresent()) {
+    if(!document.querySelector('.bg_container').classList.contains('makeSwipeable')) {
         let bg_container = document.querySelector('.bg_container');
         bg_container.classList.toggle('d_none');
         hideScrollbar();
@@ -182,54 +183,6 @@ function removeClassActiveSlide(id) {
 }
 
 
-// register plugin
-Chart.register(ChartDataLabels);
-
-
-function showStatChart() {
-    let ctx = document.getElementById('barStats').getContext('2d');
-    Chart.defaults.font.size = 16;
-    Chart.defaults.color = '#ffffff';
-    Chart.defaults.font.family = "'Sigmar One', sansr-serif";
-    Chart.defaults.plugins.legend.display = false;
-    Chart.defaults.plugins.tooltip.enabled = false;
-    barStats = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: [pokemon.stats[0].stat.name, pokemon.stats[1].stat.name, pokemon.stats[2].stat.name, ['Special-', 'Attack'], ['Special-', 'Defense'], pokemon.stats[5].stat.name],
-            datasets: [{
-                axis: 'y',
-                data: [pokemon.stats[0].base_stat, pokemon.stats[1].base_stat, pokemon.stats[2].base_stat, pokemon.stats[3].base_stat, pokemon.stats[4].base_stat, pokemon.stats[5].base_stat],
-                fill: false,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 205, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(201, 203, 207, 0.2)'
-                ],
-                borderColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(54, 162, 235)',
-                    'rgb(153, 102, 255)',
-                    'rgb(201, 203, 207)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            maintainAspectRatio: false
-        },
-    });
-}
-
-
 function switchRight(index) {
     document.querySelector('.bg_container').classList.add('makeSwipeable'); // Z114-118 - Ich füge hier beim Klick auf den Pfeil eine Pseudoklasse hinzu, die in der Funktion changeBigCard() geprüft wird und nur getoggelt wird wenn die Klasse nicht vorhanden ist, damit beim Klick auf den Pfeil die BigCard nicht geschlossen wird
     index++;
@@ -277,7 +230,6 @@ function filterNames() {
 
 function resetPokemnon() {
     resetContainer()
-    countRender = 0;
     resetArrays()
     document.querySelector('.btn_pokemon').classList.remove('d_none');
     loadPokemon();
@@ -300,7 +252,7 @@ async function renderSearchPokemon(search) {
         }
     }
     selectionPokemon = searchPokemons;
-    renderPokemonInfo();
+    renderPokemonInfo(10); // Hier werden nur 10 Pokemon angezeigt. Somit wird der Default Parameter in der renderPokemonInfo() (-> selectionPokemon.length)
     searchPokemons = [];
 }
 
@@ -308,6 +260,7 @@ async function renderSearchPokemon(search) {
 function resetArrays() {
     fetchedPokemon = [];
     pokemonSpecies = [];
+    countRender = 0;
 }
 
 
@@ -335,4 +288,50 @@ function showGenusEN() {
 }
 
 
+// register plugin
+Chart.register(ChartDataLabels);
+
+
+function showStatChart() {
+    let ctx = document.getElementById('barStats').getContext('2d');
+    Chart.defaults.font.size = 16;
+    Chart.defaults.color = '#ffffff';
+    Chart.defaults.font.family = "'Sigmar One', sansr-serif";
+    Chart.defaults.plugins.legend.display = false;
+    Chart.defaults.plugins.tooltip.enabled = false;
+    barStats = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [pokemon.stats[0].stat.name, pokemon.stats[1].stat.name, pokemon.stats[2].stat.name, ['Special-', 'Attack'], ['Special-', 'Defense'], pokemon.stats[5].stat.name],
+            datasets: [{
+                axis: 'y',
+                data: [pokemon.stats[0].base_stat, pokemon.stats[1].base_stat, pokemon.stats[2].base_stat, pokemon.stats[3].base_stat, pokemon.stats[4].base_stat, pokemon.stats[5].base_stat],
+                fill: false,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 205, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(201, 203, 207, 0.2)'
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
+                    'rgb(201, 203, 207)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            maintainAspectRatio: false
+        },
+    });
+}
 
