@@ -33,7 +33,7 @@ async function renderPokemonInfo() {
         changeBackgroundColor(currentPokemon, i+countRender);
 
     }
-    if(!document.querySelector('.btn_pokemon')) { // Prüft ob der Button noch nicht vorhanden ist und falls dieser noch nicht vorhanden ist wird die nächste Zeile ausgeführt und der Button generiert, ansonsten nicht
+    if(buttonIsNotFound()) { // Prüft ob der Button noch nicht vorhanden ist und falls dieser noch nicht vorhanden ist wird die nächste Zeile ausgeführt und der Button generiert, ansonsten nicht
         mainContainer.innerHTML += generateButtonNextPokemon();
     }
 }
@@ -42,7 +42,7 @@ async function renderPokemonInfo() {
 function showImage(index) {
     let pokemonImage = document.querySelector(`#pokemon_image${index}`);
 
-        if (currentPokemon.sprites.other.dream_world.front_default) {
+        if (preferredImageIsFound(currentPokemon)) {
             pokemonImage.innerHTML += `<img class="img_pokemon" src="${currentPokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>`;
         } else {
             pokemonImage.innerHTML += `<img class="img_pokemon" src="${currentPokemon.sprites.other['official-artwork'].front_default}" alt="pokemon"/>`;
@@ -67,10 +67,10 @@ function changeBackgroundColor(array, i) {
 function addClassColor(array, i) {
     document.querySelector(`#top_card${i}`).classList.add(`bg_${array.types[0].type.name}Pokemon`);
     document.querySelector(`#pokemon_image${i}`).classList.add(`bg_${array.types[0].type.name}Pokemon`);
-    if (document.querySelector(`#speaker_iconDiv${i}`)) {
+    if (speakerElementIsTrue(i)) {
         document.querySelector(`#speaker_iconDiv${i}`).classList.add(`bgText_${array.types[0].type.name}Pokemon`);
     }
-    if (document.querySelector(`.arrow_iconDiv${i}`)) {
+    if (arrowElementsAreTrue(i)) {
         document.querySelectorAll(`.arrow_iconDiv${i}`).forEach((arrowElement) => {
             arrowElement.classList.add(`bgText_${array.types[0].type.name}Pokemon`);
         });
@@ -95,7 +95,7 @@ function openBigCard(i) {
 function showBigImage(index) {
     let pokemonImage = document.querySelector(`#pokemon_image${index}`);
 
-        if (pokemon.sprites.other.dream_world.front_default) {
+        if (preferredImageIsFound(pokemon)) {
             pokemonImage.innerHTML = `<img class="bigPokemon_image" src="${pokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>`;
         } else {
             pokemonImage.innerHTML = `<img class="bigPokemon_image" src="${pokemon.sprites.other['official-artwork'].front_default}" alt="pokemon"/>`;
@@ -112,10 +112,17 @@ async function saveInArray(pokemon) {
 
 
 function changeBigCard() {
-    if(!document.querySelector('.bg_container').classList.contains('makeSwipeable')) {
+    if(certainClassIsNotPresent()) {
         let bg_container = document.querySelector('.bg_container');
         bg_container.classList.toggle('d_none');
+        hideScrollbar();
     }
+}
+
+
+function hideScrollbar() {
+    let body = document.querySelector('body');
+    body.classList.toggle('hide_scrollbar');
 }
 
 
@@ -124,16 +131,12 @@ function doNotClose(event) {
 }
 
 
-function convertNumber(number) {
-    return number / 10;
-}
-
-
 function playAudio() {
     let audioSound = document.querySelector('#audioSound');
     audioSound.volume = 0.1;
     audioSound.play();
 }
+
 
 function renderBaseInfos(i) {
     pokemon = fetchedPokemon[i];
@@ -221,7 +224,6 @@ function showStatChart() {
         },
         options: {
             indexAxis: 'y',
-            plugins: [ChartDataLabels],
             maintainAspectRatio: false
         },
     });
@@ -229,9 +231,9 @@ function showStatChart() {
 
 
 function switchRight(index) {
-    document.querySelector('.bg_container').classList.add('makeSwipeable'); // Z146-151 - Ich füge hier beim Klick auf den Pfeil eine Pseudoklasse hinzu, die in der Funktion changeBigCard() geprüft wird und nur getoggelt wird wenn die Klasse nicht vorhanden ist, damit beim Klick auf den Pfeil die BigCard nicht geschlossen wird
+    document.querySelector('.bg_container').classList.add('makeSwipeable'); // Z114-118 - Ich füge hier beim Klick auf den Pfeil eine Pseudoklasse hinzu, die in der Funktion changeBigCard() geprüft wird und nur getoggelt wird wenn die Klasse nicht vorhanden ist, damit beim Klick auf den Pfeil die BigCard nicht geschlossen wird
     index++;
-    if(index >= selectionPokemon.length + countRender) {
+    if(endOfArrayIsReached(index)) {
         index = 0;
     }
     openBigCard(index);
@@ -242,7 +244,7 @@ function switchRight(index) {
 function switchLeft(index) {
     document.querySelector('.bg_container').classList.add('makeSwipeable');
     index--;
-    if(index < 0) {
+    if(startOfArrayIsReached(index)) {
         index = selectionPokemon.length + countRender -1;
     }
     openBigCard(index);
@@ -263,7 +265,7 @@ async function showNextPokemon() {
 
 function filterNames() {
     let search = document.querySelector('.input_searchPokemon').value;
-    if(search.length > 2) {
+    if(InputIsBigEnough(search)) {
         search = search.toLowerCase();
         renderSearchPokemon(search);
         document.querySelector('.input_searchPokemon').value = "";
@@ -292,7 +294,7 @@ async function renderSearchPokemon(search) {
     resetContainer()
     for (let i = 0; i < selectionPokemon.length; i++) {
         const searchPokemon = selectionPokemon[i]['name'];
-        if(searchPokemon.toLowerCase().includes(search)) {
+        if(searchedNameIsAvailable(searchPokemon, search)) {
             let searchPokemonIndex = selectionPokemon.findIndex(pokemon => pokemon.name == searchPokemon);
             searchPokemons.push(selectionPokemon[searchPokemonIndex]);
         }
@@ -317,10 +319,8 @@ function resetContainer() {
 
 function showHabitat() {
     let pokemonHabitat = document.querySelector('.table_habitat');
-    if(currentPokemonSpecies.habitat) {
-        pokemonHabitat.innerHTML += `
-        <td class="first">Habitat:</td>
-        <td class="second">${currentPokemonSpecies.habitat.name}</td>`;
+    if(habitatIsTrue()) {
+        pokemonHabitat.innerHTML += generateHabitatInnerHTML();
     } 
 }
 
@@ -328,10 +328,11 @@ function showHabitat() {
 function showGenusEN() {
     let pokemonGenus = document.querySelector('.table_genus')
     for (let i = 0; i < currentPokemonSpecies.genera.length; i++) {
-            if(currentPokemonSpecies.genera[i].language.name == "en") {
-                pokemonGenus.innerHTML += `
-                <td class="first">Species:</td>
-                <td class="second">${currentPokemonSpecies.genera[i].genus}</td>`;
+            if(rightLanguageIsFound(i)) {
+                pokemonGenus.innerHTML += generateGenusInnerHTML(i);
             } 
     }
 }
+
+
+

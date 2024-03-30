@@ -492,6 +492,17 @@ h3 {
     padding: 8px 16px;
 }
 
+.hide_scrollbar {
+    overflow: hidden;
+}
+
+@media(max-width: 700px) {
+    .searchbar {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
 @media(max-width: 570px) {
     .bg_container {
         flex-direction: column;
@@ -527,6 +538,12 @@ h3 {
     }
     .arrow_img {
         width: 40px;
+    }
+}
+
+@media(max-width: 400px) {
+    .input_searchPokemon {
+        width: 90%;
     }
 }
 

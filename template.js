@@ -97,6 +97,20 @@ function generateBaseInfoInnerHTML(pokemon, currentPokemonSpecies) {
 }
 
 
+function generateHabitatInnerHTML() {
+    return `
+        <td class="first">Habitat:</td>
+        <td class="second">${currentPokemonSpecies.habitat.name}</td>`;
+}
+
+
+function generateGenusInnerHTML(i) {
+    return `
+        <td class="first">Species:</td>
+        <td class="second">${currentPokemonSpecies.genera[i].genus}</td>`;
+}
+
+
 function generateFirstAbilityInnerHTML(pokemon) {
     return /* HTML */ `
         <td class="first">Abilities:</td>
