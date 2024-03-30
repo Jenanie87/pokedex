@@ -19,7 +19,6 @@ async function loadPokemon() {
 async function renderPokemonInfo(amount = selectionPokemon.length) { // amount = selectionPokemon.length -> Wenn kein Argument übergeben wird, wird der Default Parameter gewählt (hier selectionPokemon.length), ansonsten wird der Parameter (hier: selectionPokemon.length) überschrieben und eine andere Länge ausgewählt
     let content = document.querySelector('#content');
     let mainContainer = document.querySelector('#main_container');
-
     for (let i = 0; i < amount; i++) {
         const pokemon = selectionPokemon[i];
         let url = pokemon.url;
@@ -27,13 +26,10 @@ async function renderPokemonInfo(amount = selectionPokemon.length) { // amount =
         currentPokemon = await response.json();
         fetchedPokemon.push(currentPokemon);
         saveInArray(currentPokemon); // Damit die Daten in About schneller geladen werden
-        content.innerHTML += generatePokemonCardsInnerHTML(i+countRender);
-        showImage(i + countRender);
-        renderPokemonElements(currentPokemon, i+countRender);
-        changeBackgroundColor(currentPokemon, i+countRender);
-
+        content.innerHTML += generatePokemonCardsInnerHTML(i + countRender);
+        loadDesign(i + countRender, currentPokemon);
     }
-    if(buttonIsNotFound()) { // Prüft ob der Button noch nicht vorhanden ist und falls dieser noch nicht vorhanden ist wird die nächste Zeile ausgeführt und der Button generiert, ansonsten nicht
+    if (buttonIsNotFound()) { // Prüft ob der Button noch nicht vorhanden ist und falls dieser noch nicht vorhanden ist wird die nächste Zeile ausgeführt und der Button generiert, ansonsten nicht
         mainContainer.innerHTML += generateButtonNextPokemon();
     }
 }
@@ -41,13 +37,12 @@ async function renderPokemonInfo(amount = selectionPokemon.length) { // amount =
 
 function showImage(index) {
     let pokemonImage = document.querySelector(`#pokemon_image${index}`);
-
-        if (preferredImageIsFound(currentPokemon)) {
-            pokemonImage.innerHTML += `<img class="img_pokemon" src="${currentPokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>`;
-        } else {
-            pokemonImage.innerHTML += `<img class="img_pokemon" src="${currentPokemon.sprites.other['official-artwork'].front_default}" alt="pokemon"/>`;
-        } 
+    if (preferredImageIsFound(currentPokemon)) {
+        pokemonImage.innerHTML += `<img class="img_pokemon" src="${currentPokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>`;
+    } else {
+        pokemonImage.innerHTML += `<img class="img_pokemon" src="${currentPokemon.sprites.other['official-artwork'].front_default}" alt="pokemon"/>`;
     }
+}
 
 
 function renderPokemonElements(array, j) {
@@ -61,6 +56,13 @@ function renderPokemonElements(array, j) {
 
 function changeBackgroundColor(array, i) {
     addClassColor(array, i);
+}
+
+
+function loadDesign(index, array) {
+    showImage(index);
+    renderPokemonElements(array, index);
+    changeBackgroundColor(array, index);
 }
 
 
@@ -84,10 +86,9 @@ function addClassColor(array, i) {
 function openBigCard(i) {
     changeBigCard();
     pokemon = fetchedPokemon[i];
-    console.log(pokemon);
     let bg_container = document.querySelector('.bg_container');
     bg_container.innerHTML = generatePokemonInfosInnerHTML(pokemon, i);
-    showBigImage(i, pokemon);   
+    showBigImage(i, pokemon);
     renderPokemonElements(pokemon, i);
     changeBackgroundColor(pokemon, i);
 }
@@ -95,13 +96,12 @@ function openBigCard(i) {
 
 function showBigImage(index, pokemon) {
     let pokemonImage = document.querySelector(`#pokemon_image${index}`);
-
-        if (preferredImageIsFound(pokemon)) {
-            pokemonImage.innerHTML += `<img class="bigPokemon_image" src="${pokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>`;
-        } else {
-            pokemonImage.innerHTML = `<img class="bigPokemon_image" src="${pokemon.sprites.other['official-artwork'].front_default}" alt="pokemon"/>`;
-        } 
+    if (preferredImageIsFound(pokemon)) {
+        pokemonImage.innerHTML += `<img class="bigPokemon_image" src="${pokemon.sprites.other.dream_world.front_default}" alt="pokemon"/>`;
+    } else {
+        pokemonImage.innerHTML = `<img class="bigPokemon_image" src="${pokemon.sprites.other['official-artwork'].front_default}" alt="pokemon"/>`;
     }
+}
 
 
 async function saveInArray(pokemon) {
@@ -113,7 +113,7 @@ async function saveInArray(pokemon) {
 
 
 function changeBigCard() {
-    if(!document.querySelector('.bg_container').classList.contains('makeSwipeable')) {
+    if (!document.querySelector('.bg_container').classList.contains('makeSwipeable')) {
         let bg_container = document.querySelector('.bg_container');
         bg_container.classList.toggle('d_none');
         hideScrollbar();
@@ -156,10 +156,9 @@ function renderPokemonAbilities(pokemon) {
     let tableAbilities = document.querySelector('.table_abilities');
     let nextAbilities = document.querySelector('.next_abilities');
     tableAbilities.innerHTML += generateFirstAbilityInnerHTML(pokemon);
-
     for (let i = 1; i < pokemon['abilities'].length; i++) {
         const pokemonAbility = pokemon.abilities[i];
-        nextAbilities.innerHTML += generateNextAbilityInnerHTML(pokemonAbility);        
+        nextAbilities.innerHTML += generateNextAbilityInnerHTML(pokemonAbility);
     }
 }
 
@@ -186,7 +185,7 @@ function removeClassActiveSlide(id) {
 function switchRight(index) {
     document.querySelector('.bg_container').classList.add('makeSwipeable'); // Z114-118 - Ich füge hier beim Klick auf den Pfeil eine Pseudoklasse hinzu, die in der Funktion changeBigCard() geprüft wird und nur getoggelt wird wenn die Klasse nicht vorhanden ist, damit beim Klick auf den Pfeil die BigCard nicht geschlossen wird
     index++;
-    if(endOfArrayIsReached(index)) {
+    if (endOfArrayIsReached(index)) {
         index = 0;
     }
     openBigCard(index);
@@ -197,8 +196,8 @@ function switchRight(index) {
 function switchLeft(index) {
     document.querySelector('.bg_container').classList.add('makeSwipeable');
     index--;
-    if(startOfArrayIsReached(index)) {
-        index = selectionPokemon.length + countRender -1;
+    if (startOfArrayIsReached(index)) {
+        index = selectionPokemon.length + countRender - 1;
     }
     openBigCard(index);
     document.querySelector('.bg_container').classList.remove('makeSwipeable');
@@ -211,26 +210,25 @@ async function showNextPokemon() {
     let nextResponseAsJson = await response.json();
     selectionPokemon = nextResponseAsJson.results;
     responseAsJSON = nextResponseAsJson;
-    countRender+= 20;
+    countRender += 20;
     renderPokemonInfo();
 }
 
 
 function filterNames() {
     let search = document.querySelector('.input_searchPokemon').value;
-    if(InputIsBigEnough(search)) {
+    if (InputIsBigEnough(search)) {
         search = search.toLowerCase();
         renderSearchPokemon(search);
         document.querySelector('.input_searchPokemon').value = "";
         document.querySelector('.btn_pokemon').classList.add('d_none'); // versteckt den button bei den searchPokemon
         document.querySelector('.btn_reset').classList.remove('d_none');
-    } 
+    }
 }
 
 
 function resetPokemnon() {
-    resetContainer()
-    resetArrays()
+    resetFunctions();
     document.querySelector('.btn_pokemon').classList.remove('d_none');
     loadPokemon();
     document.querySelector('.btn_reset').classList.add('d_none');
@@ -238,15 +236,14 @@ function resetPokemnon() {
 
 
 async function renderSearchPokemon(search) {
-    resetArrays()
     let url = 'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0';
     let response = await fetch(url);
     let responseAsJSON = await response.json();
     selectionPokemon = responseAsJSON.results;
-    resetContainer()
+    resetFunctions()
     for (let i = 0; i < selectionPokemon.length; i++) {
         const searchPokemon = selectionPokemon[i]['name'];
-        if(searchedNameIsAvailable(searchPokemon, search)) {
+        if (searchedNameIsAvailable(searchPokemon, search)) {
             let searchPokemonIndex = selectionPokemon.findIndex(pokemon => pokemon.name == searchPokemon);
             searchPokemons.push(selectionPokemon[searchPokemonIndex]);
         }
@@ -270,20 +267,26 @@ function resetContainer() {
 }
 
 
+function resetFunctions() {
+    resetArrays();
+    resetContainer();
+}
+
+
 function showHabitat() {
     let pokemonHabitat = document.querySelector('.table_habitat');
-    if(habitatIsTrue()) {
+    if (habitatIsTrue()) {
         pokemonHabitat.innerHTML += generateHabitatInnerHTML();
-    } 
+    }
 }
 
 
 function showGenusEN() {
     let pokemonGenus = document.querySelector('.table_genus')
     for (let i = 0; i < currentPokemonSpecies.genera.length; i++) {
-            if(rightLanguageIsFound(i)) {
-                pokemonGenus.innerHTML += generateGenusInnerHTML(i);
-            } 
+        if (rightLanguageIsFound(i)) {
+            pokemonGenus.innerHTML += generateGenusInnerHTML(i);
+        }
     }
 }
 
