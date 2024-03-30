@@ -143,6 +143,8 @@ function renderBaseInfos(i) {
     let contentStats = document.querySelector('.content_slide');
     contentStats.innerHTML = generateBaseInfoInnerHTML(pokemon, currentPokemonSpecies);
     renderPokemonAbilities(pokemon);
+    showHabitat();
+    showGenusEN();
 }
 
 
@@ -191,7 +193,7 @@ function showStatChart() {
     barStats = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: [pokemon.stats[0].stat.name, pokemon.stats[1].stat.name, pokemon.stats[2].stat.name, pokemon.stats[3].stat.name, pokemon.stats[4].stat.name, pokemon.stats[5].stat.name],
+            labels: [pokemon.stats[0].stat.name, pokemon.stats[1].stat.name, pokemon.stats[2].stat.name, ['Special-', 'Attack'], ['Special-', 'Defense'], pokemon.stats[5].stat.name],
             datasets: [{
                 axis: 'y',
                 data: [pokemon.stats[0].base_stat, pokemon.stats[1].base_stat, pokemon.stats[2].base_stat, pokemon.stats[3].base_stat, pokemon.stats[4].base_stat, pokemon.stats[5].base_stat],
@@ -266,13 +268,18 @@ function filterNames() {
         renderSearchPokemon(search);
         document.querySelector('.input_searchPokemon').value = "";
         document.querySelector('.btn_pokemon').classList.add('d_none'); // versteckt den button bei den searchPokemon
-    } else {
-        resetContainer()
-        countRender = 0;
-        resetArrays()
-        document.querySelector('.btn_pokemon').classList.remove('d_none');
-        loadPokemon();
-    }
+        document.querySelector('.btn_reset').classList.remove('d_none');
+    } 
+}
+
+
+function resetPokemnon() {
+    resetContainer()
+    countRender = 0;
+    resetArrays()
+    document.querySelector('.btn_pokemon').classList.remove('d_none');
+    loadPokemon();
+    document.querySelector('.btn_reset').classList.add('d_none');
 }
 
 
@@ -305,4 +312,26 @@ function resetArrays() {
 function resetContainer() {
     let content = document.querySelector('#content');
     content.innerHTML = '';
+}
+
+
+function showHabitat() {
+    let pokemonHabitat = document.querySelector('.table_habitat');
+    if(currentPokemonSpecies.habitat) {
+        pokemonHabitat.innerHTML += `
+        <td class="first">Habitat:</td>
+        <td class="second">${currentPokemonSpecies.habitat.name}</td>`;
+    } 
+}
+
+
+function showGenusEN() {
+    let pokemonGenus = document.querySelector('.table_genus')
+    for (let i = 0; i < currentPokemonSpecies.genera.length; i++) {
+            if(currentPokemonSpecies.genera[i].language.name == "en") {
+                pokemonGenus.innerHTML += `
+                <td class="first">Species:</td>
+                <td class="second">${currentPokemonSpecies.genera[i].genus}</td>`;
+            } 
+    }
 }

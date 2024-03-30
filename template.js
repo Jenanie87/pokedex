@@ -68,9 +68,8 @@ function generateBaseInfoInnerHTML(pokemon, currentPokemonSpecies) {
     return /* HTML */ `
         <table>
             <tbody>
-                <tr>
-                    <td class="first">Species:</td>
-                    <td class="second">${currentPokemonSpecies.genera[7].genus}</td>
+                <tr class="table_genus">
+                        <!-- render in function showGenus() -->
                 </tr>
                 <tr>
                     <td class="first">Height:</td>
@@ -80,9 +79,8 @@ function generateBaseInfoInnerHTML(pokemon, currentPokemonSpecies) {
                     <td class="first">Weight:</td>
                     <td class="second">${convertNumber(pokemon.weight)} kg</td>
                 </tr>
-                <tr>
-                    <td class="first">Habitat:</td>
-                    <td class="second">${currentPokemonSpecies.habitat.name}</td>
+                <tr class="table_habitat">
+                        <!-- render in function showHabitat() -->
                 </tr>
                 <tr>
                     <td class="first">Growth-Rate:</td>

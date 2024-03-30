@@ -344,7 +344,8 @@ h2 {
     box-shadow: 0 0 0 2px var(--darkred), 0 0.75em 0 0 var(--darkred);
 }
 
-.btn_search {
+.btn_search,
+.btn_reset {
     font-family: 'Pokemon Solid';
     text-shadow: 2px 2px 3px var(--darkgrey);
     color: var(--lightgrey);
@@ -356,21 +357,28 @@ h2 {
     box-shadow: 0 0 0 2px var(--red), 0 0.25em 0 0 var(--red);
 }
 
-.btn_search:hover {
+.btn_search:hover,
+.btn_reset:hover {
     background-color: var(--red);
     box-shadow: 0 0 0 2px var(--darkred), 0 0.25em 0 0 var(--darkred);
 }
 
-.btn_pokemon::before {
+.btn_pokemon::before,
+.btn_search::before,
+.btn_reset::before {
     transform: translate3d(0, 0.75em, -1em);
     transition: all 175ms cubic-bezier(0, 0, 1, 1);
 }
 
-.btn_pokemon:active {
+.btn_pokemon:active,
+.btn_search:active,
+.btn_reset:active {
     transform: translate(0em, 0.75em);
   }
 
-.btn_pokemon:active::before {
+.btn_pokemon:active::before,
+.btn_search:active::before,
+.btn_reset:active::before {
     transform: translate3d(0, 0, -1em);
   }
 
@@ -400,6 +408,7 @@ h2 {
 
 canvas {
     width: 500px;
+    min-height: 300px;
 }
 
 .general_information {
