@@ -127,12 +127,25 @@ function generateNextAbilityInnerHTML(pokemonAbility) {
 }
 
 
-//helpfunctions
-
 function generateStatsInnerHTML() {
     return /* HTML */`
         <canvas id="barStats"></canvas>`;
 }
+
+
+function generateErrorMessageInnerHTML() {
+    return /*HTML */ `
+        <div class="error_message_content">
+            <h2 class=error_text>Searched Pokèmon was not found</h2>
+            <div class="image_link">
+                <img class="img_hidingPokemon" src="img/pokemon_meme_pikachu.gif" alt="hiding pokèmon meme">
+                <a href="https://cheezburger.com/8549387776/pokemon-memes-pikachu-gif">link to the gif</a>
+            </div>
+        </div>`;
+}
+
+
+//helpfunctions
 
 
 function convertNumber(number) {
@@ -192,4 +205,24 @@ function InputIsBigEnough(search) {
 
 function habitatIsTrue() {
     return currentPokemonSpecies.habitat;
+}
+
+
+function checkArrayLength(array, amount) {
+    if(array.length  < amount) { 
+        amount = array.length;
+    }
+    return amount;
+}
+
+
+function checkArrayLengthOfSearchPokemon() {
+    if(searchPokemons.length > 0) {
+        selectionPokemon = searchPokemons;
+        renderPokemonInfo(10); // Hier werden nur 10 Pokemon angezeigt. Somit wird der Default Parameter in der renderPokemonInfo() (-> selectionPokemon.length)
+        searchPokemons = [];
+    } else {
+        resetContainer();
+        content.innerHTML += generateErrorMessageInnerHTML();
+    }
 }

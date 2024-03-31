@@ -216,6 +216,34 @@ h2 {
     font-size: 32px;
 }
 
+.error_text {
+    color: white;
+    text-align: center;
+}
+
+.error_message_content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image_link {
+    display: flex;
+    flex-direction: column;
+}
+
+.img_hidingPokemon {
+    width: 700px;
+    border-radius: 8px;
+    box-shadow: 10px 10px 10px var(--darkergrey);
+}
+
+a {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 .id {
     display: flex;
     justify-content: end;
@@ -491,6 +519,12 @@ h3 {
     overflow: hidden;
 }
 
+@media(max-width: 750px) {
+    .img_hidingPokemon {
+        width: 500px;
+    }
+}
+
 @media(max-width: 700px) {
     .searchbar {
         flex-direction: column;
@@ -515,6 +549,15 @@ h3 {
     }
 }
 
+@media(max-width: 550px) {
+    .img_hidingPokemon {
+        width: 100%;
+    }
+    .error_text {
+        font-size: 24px;
+    }
+}
+
 @media(max-width: 440px) {
     .speaker_iconDiv {
         width: 48px;
@@ -533,6 +576,9 @@ h3 {
     }
     .arrow_img {
         width: 40px;
+    }
+    a {
+        font-size: 14px;
     }
 }
 

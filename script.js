@@ -17,6 +17,7 @@ async function loadPokemon() {
 
 
 async function renderPokemonInfo(amount = selectionPokemon.length) { // amount = selectionPokemon.length -> Wenn kein Argument übergeben wird, wird der Default Parameter gewählt (hier selectionPokemon.length), ansonsten wird der Parameter (hier: selectionPokemon.length) überschrieben und eine andere Länge ausgewählt
+    amount = checkArrayLength(selectionPokemon, amount);
     let content = document.querySelector('#content');
     let mainContainer = document.querySelector('#main_container');
     for (let i = 0; i < amount; i++) {
@@ -247,10 +248,8 @@ async function renderSearchPokemon(search) {
             let searchPokemonIndex = selectionPokemon.findIndex(pokemon => pokemon.name == searchPokemon);
             searchPokemons.push(selectionPokemon[searchPokemonIndex]);
         }
-    }
-    selectionPokemon = searchPokemons;
-    renderPokemonInfo(10); // Hier werden nur 10 Pokemon angezeigt. Somit wird der Default Parameter in der renderPokemonInfo() (-> selectionPokemon.length)
-    searchPokemons = [];
+    } 
+    checkArrayLengthOfSearchPokemon();
 }
 
 
